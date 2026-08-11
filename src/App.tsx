@@ -1,169 +1,248 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import './App.css'
-import { LoginPage } from './pages/auth/LoginPage'
-import { CustomerDashboard } from './pages/customer/CustomerDashboard'
-import { CustomerProfilePage } from './pages/customer/CustomerProfilePage'
-import { RequirementCreatePage } from './pages/customer/RequirementCreatePage'
-import { RequirementsListPage } from './pages/customer/RequirementsListPage'
-import { RequirementDetailsPage } from './pages/customer/RequirementDetailsPage'
-import { ContractorDashboard } from './pages/contractor/ContractorDashboard'
-import { ContractorProfilePage } from './pages/contractor/ContractorProfilePage'
-import { PortfolioListPage } from './pages/contractor/PortfolioListPage'
-import { PortfolioCreatePage } from './pages/contractor/PortfolioCreatePage'
-import { LeadsListPage } from './pages/contractor/LeadsListPage'
-import { ProtectedRoute } from './routes/ProtectedRoute'
-import { useAuth } from './hooks/auth/useAuth'
-import { getDashboardPathForRole } from './services/auth/authRedirect'
-import { PublicMarketplace } from './pages/PublicMarketplace'
-import { BookServicePage } from './pages/customer/BookServicePage'
-import { RequestCallbackPage } from './pages/RequestCallbackPage'
+import { useEffect, useState, lazy, Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-interface RoleDashboardPlaceholderProps {
-  title: string
-}
-
-function RoleDashboardPlaceholder({ title }: RoleDashboardPlaceholderProps) {
-  return (
-    <main className="min-h-screen bg-[#f7f8f5] px-4 py-10 text-stone-950">
-      <section className="mx-auto max-w-xl rounded-lg border border-stone-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        <p className="mt-3 text-sm text-stone-600">Dashboard module coming soon.</p>
-      </section>
-    </main>
-  )
-}
+const WorkspaceLayout = lazy(() => import('./layouts/WorkspaceLayout'));
+const WorkspaceOverview = lazy(() => import('./pages/workspace/WorkspaceOverview'));
+const WorkspaceRequirements = lazy(() => import('./pages/workspace/WorkspaceRequirements'));
+const WorkspaceBookings = lazy(() => import('./pages/workspace/WorkspaceBookings'));
+const WorkspaceInbox = lazy(() => import('./pages/workspace/WorkspaceInbox'));
+const WorkspaceNotifications = lazy(() => import('./pages/workspace/WorkspaceNotifications'));
+const WorkspaceSettings = lazy(() => import('./pages/workspace/WorkspaceSettings'));
+const ProfessionalDashboard = lazy(() => import('./pages/workspace/professional/ProfessionalDashboard'));
+const ProfessionalLeads = lazy(() => import('./pages/workspace/professional/ProfessionalLeads'));
+const ProfessionalProjects = lazy(() => import('./pages/workspace/professional/ProfessionalProjects'));
+const ProfessionalProfile = lazy(() => import('./pages/workspace/professional/ProfessionalProfile'));
+const ConsultationWorkspace = lazy(() => import('./pages/workspace/consultant/ConsultationWorkspace'));
+const ConsultationReportPage = lazy(() => import('./pages/workspace/consultant/ConsultationReportPage'));
+const ConsultantCrmPage = lazy(() => import('./pages/workspace/consultant/ConsultantCrmPage'));
+const RequirementWorkspacePage = lazy(() => import('./pages/workspace/professional/RequirementWorkspacePage'));
+const QuotationManagementPage = lazy(() => import('./pages/workspace/professional/QuotationManagementPage'));
+const ProfessionalProjectWorkspace = lazy(() => import('./pages/workspace/professional/ProjectWorkspacePage'));
+import { useAuth } from './hooks/auth/useAuth';
+import { LoginPage } from './pages/auth/LoginPage';
+import { ProtectedRoute } from './routes/ProtectedRoute';
+import { PublicMarketplace } from './pages/PublicMarketplace';
+import { BookServicePage } from './pages/customer/BookServicePage';
+import { RequestCallbackPage } from './pages/RequestCallbackPage';
+import { BlogCatalog } from './pages/blog/BlogCatalog';
+import { ArticleDetailPage } from './pages/blog/ArticleDetailPage';
+import { ChatPanel } from './pages/chat/ChatPanel';
+import { SubscriptionsPage } from './pages/SubscriptionsPage';
+import { ProjectWorkspacePage } from './pages/shared/ProjectWorkspacePage';
+import { AppointmentSchedulingPage } from './pages/shared/AppointmentSchedulingPage';
+import { CollaborationWorkspacePage } from './pages/shared/CollaborationWorkspacePage';
+import { CategoryProvidersPage } from './pages/CategoryProvidersPage';
+import { SearchResultsPage } from './pages/SearchResultsPage';
+import { KnowMorePage } from './pages/KnowMorePage';
+import { PublicLayout } from './layouts/PublicLayout';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AdminAnalyticsDashboard } from './pages/admin/AdminAnalyticsDashboard';
+import { AdminArticlesPage } from './pages/admin/AdminArticlesPage';
+import AdminPlatformSettings from './pages/admin/AdminPlatformSettings';
+import { FinanceBillingPage } from './pages/shared/FinanceBillingPage';
+import { SmartIntelligencePage } from './pages/shared/SmartIntelligencePage';
+import { IntegrationAutomationPage } from './pages/shared/IntegrationAutomationPage';
+import { MobilePwaPage } from './pages/shared/MobilePwaPage';
+import { useAuthDispatch } from './hooks/auth/useAuthStore';
+import { refreshThunk, logout } from './store/auth/authSlice';
 
 function RootRedirect() {
-  const { isAuthenticated, user } = useAuth()
+  return <Navigate to="/" replace />;
+}
 
-  if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />
+function WorkspaceIndexRedirect() {
+  const { user } = useAuth();
+  const norm = user?.role?.toUpperCase() || '';
+  if (norm.includes('ADMIN')) {
+    return <Navigate to="/admin/dashboard" replace />;
   }
-
-  return <Navigate to={getDashboardPathForRole(user.role)} replace />
+  if (norm.includes('PROVIDER')) {
+    return <Navigate to="/workspace/dashboard" replace />;
+  }
+  return <Navigate to="/workspace/overview" replace />;
 }
 
 function App() {
+  const dispatch = useAuthDispatch();
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    dispatch(refreshThunk()).finally(() => {
+      setInitialized(true);
+    });
+
+    const handleGlobalLogout = () => {
+      dispatch(logout());
+    };
+    window.addEventListener('auth:logout', handleGlobalLogout);
+
+    return () => {
+      window.removeEventListener('auth:logout', handleGlobalLogout);
+    };
+  }, [dispatch]);
+
+  if (!initialized) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-stone-50">
+        <div className="text-center space-y-3">
+          <div className="h-8 w-8 rounded-full border-4 border-stone-200 border-t-emerald-700 animate-spin mx-auto"></div>
+          <p className="text-xs font-bold text-stone-500 uppercase tracking-widest">Securing Session...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<PublicMarketplace />} />
-      <Route path="/request-callback" element={<RequestCallbackPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route element={<PublicLayout />}>
+        {/* The root page is the single unified dashboard for everyone */}
+        <Route path="/" element={<PublicMarketplace />} />
+        <Route path="/category/:id/providers" element={<CategoryProvidersPage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
+        <Route path="/know-more" element={<KnowMorePage />} />
+        <Route path="/about" element={<KnowMorePage />} />
+        <Route path="/request-callback" element={<RequestCallbackPage />} />
+        <Route path="/subscriptions" element={<SubscriptionsPage />} />
+        
+        <Route
+          path="/book-service"
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
+              <BookServicePage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route path="/blog" element={<BlogCatalog />} />
+        <Route path="/blog/:slug" element={<ArticleDetailPage />} />
+        
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_CUSTOMER', 'ROLE_PROVIDER']}>
+              <ChatPanel />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects/:id"
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_CUSTOMER', 'ROLE_PROVIDER']}>
+              <ProjectWorkspacePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/appointments"
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_CUSTOMER', 'ROLE_PROVIDER']}>
+              <AppointmentSchedulingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/collaboration"
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_CUSTOMER', 'ROLE_PROVIDER']}>
+              <CollaborationWorkspacePage />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+
       <Route
-        path="/book-service"
+        path="/workspace"
         element={
-          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
-            <BookServicePage />
+          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER', 'ROLE_PROVIDER', 'ROLE_ADMIN']}>
+            <Suspense
+              fallback={
+                <div className="flex h-screen w-screen items-center justify-center bg-stone-50">
+                  <div className="text-center space-y-3">
+                    <div className="h-8 w-8 rounded-full border-4 border-stone-200 border-t-emerald-700 animate-spin mx-auto"></div>
+                    <p className="text-xs font-bold text-stone-500 uppercase tracking-widest">Loading Workspace...</p>
+                  </div>
+                </div>
+              }
+            >
+              <WorkspaceLayout />
+            </Suspense>
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/customer/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
-            <CustomerDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/customer/profile"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
-            <CustomerProfilePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/customer/requirements/create"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
-            <RequirementCreatePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/customer/requirements"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
-            <RequirementsListPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/customer/requirements/:id"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
-            <RequirementDetailsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/contractor/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_PROVIDER', 'ROLE_CONTRACTOR']}>
-            <ContractorDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/contractor/profile"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_PROVIDER', 'ROLE_CONTRACTOR']}>
-            <ContractorProfilePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/contractor/portfolio"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_PROVIDER', 'ROLE_CONTRACTOR']}>
-            <PortfolioListPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/contractor/portfolio/create"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_PROVIDER', 'ROLE_CONTRACTOR']}>
-            <PortfolioCreatePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/contractor/leads"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_PROVIDER', 'ROLE_CONTRACTOR']}>
-            <LeadsListPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/worker/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_WORKER']}>
-            <RoleDashboardPlaceholder title="Worker Dashboard" />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/architect/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={['ROLE_ARCHITECT']}>
-            <RoleDashboardPlaceholder title="Architect Dashboard" />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route index element={<WorkspaceIndexRedirect />} />
+        
+        {/* Customer subroutes */}
+        <Route path="overview" element={<WorkspaceOverview />} />
+        <Route path="requirements" element={<WorkspaceRequirements />} />
+        <Route path="settings" element={<WorkspaceSettings />} />
+
+        {/* Professional subroutes */}
+        <Route path="dashboard" element={<ProfessionalDashboard />} />
+        <Route path="leads" element={<ProfessionalLeads />} />
+        <Route path="projects" element={<ProfessionalProjects />} />
+        <Route path="profile" element={<ProfessionalProfile />} />
+        <Route path="consultation/:id" element={<ConsultationWorkspace />} />
+        <Route path="report/:id" element={<ConsultationReportPage />} />
+        <Route path="crm" element={<ConsultantCrmPage />} />
+        <Route path="requirement/:id" element={<RequirementWorkspacePage />} />
+        <Route path="quotations" element={<QuotationManagementPage />} />
+        <Route path="project/:id" element={<ProfessionalProjectWorkspace />} />
+
+        {/* Shared subroutes (dynamic rendering inside components) */}
+        <Route path="bookings" element={<WorkspaceBookings />} />
+        <Route path="inbox" element={<WorkspaceInbox />} />
+        <Route path="notifications" element={<WorkspaceNotifications />} />
+        <Route path="finance" element={<FinanceBillingPage />} />
+        <Route path="ai-intelligence" element={<SmartIntelligencePage />} />
+        <Route path="integrations" element={<IntegrationAutomationPage />} />
+        <Route path="mobile-pwa" element={<MobilePwaPage />} />
+      </Route>
+
+      {/* Deprecated customer & contractor routes redirecting to unified workspace */}
+      <Route path="/customer/dashboard" element={<Navigate to="/workspace/overview" replace />} />
+      <Route path="/customer/requirements" element={<Navigate to="/workspace/requirements" replace />} />
+      <Route path="/customer/requirements/create" element={<Navigate to="/workspace/requirements" replace />} />
+      <Route path="/customer/profile" element={<Navigate to="/workspace/settings" replace />} />
+      <Route path="/customer/bookings" element={<Navigate to="/workspace/bookings" replace />} />
+      <Route path="/contractor/dashboard" element={<Navigate to="/workspace/dashboard" replace />} />
+      {/* Admin subroutes */}
       <Route
         path="/admin/dashboard"
         element={
           <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-            <RoleDashboardPlaceholder title="Admin Dashboard" />
+            <AdminDashboard />
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin/analytics"
+        element={
+          <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+            <AdminAnalyticsDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/articles"
+        element={
+          <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+            <AdminArticlesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+            <AdminPlatformSettings />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="/login" element={<LoginPage />} />
       <Route path="*" element={<RootRedirect />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

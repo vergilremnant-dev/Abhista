@@ -1,5 +1,37 @@
+# ==============================================================================
+# DBC Abhista - Git Ignore Configuration
+# ==============================================================================
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production Builds & Outputs
+dist/
+dist-ssr/
+build/
+target/
+*.tsbuildinfo
+
+# Environment & Secrets (NEVER COMMIT)
+.env
+.env.*
+!.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel & Deployment
+.vercel
+
+# Compiled API gateway javascript outputs
+api/**/*.js
+api/**/*.js.map
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,26 +39,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# Editor & IDE Directories
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+!.vscode/settings.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.gemini/
+.system_generated/
 
-# Local env variables
-.env
-.vercel
-
-# Compiled API gateway javascript outputs
-api/**/*.js
-api/**/*.js.map
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

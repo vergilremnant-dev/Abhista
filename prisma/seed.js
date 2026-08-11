@@ -182,13 +182,13 @@ const categories = [
 
 const testUsers = [
   {
-    email: 'admin@abhista.com',
+    email: 'admin@dbc.com',
     password: 'AdminPassword123',
     role: 'ADMIN',
     profile: null,
   },
   {
-    email: 'customer@abhista.com',
+    email: 'customer@dbc.com',
     password: 'CustomerPassword123',
     role: 'CUSTOMER',
     profile: {
@@ -204,7 +204,7 @@ const testUsers = [
     },
   },
   {
-    email: 'professional@abhista.com',
+    email: 'professional@dbc.com',
     password: 'ProfessionalPassword123',
     role: 'PROVIDER',
     profile: {
@@ -212,7 +212,7 @@ const testUsers = [
     },
   },
   {
-    email: 'consultant@abhista.com',
+    email: 'consultant@dbc.com',
     password: 'ConsultantPassword123',
     role: 'PROVIDER',
     profile: {
@@ -275,7 +275,7 @@ async function main() {
             data: {
               userId: createdUser.id,
               fullName: 'Bob Builder',
-              businessName: 'Abhista Plumbing Pros',
+              businessName: 'DBC Plumbing Pros',
               phoneNumber: '9876543211',
               email: createdUser.email,
               experienceYears: 5,

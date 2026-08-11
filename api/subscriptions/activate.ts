@@ -8,6 +8,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(401).json({ success: false, message: 'Unauthorized: Missing or invalid token' });
   }
 
+  if (user.role !== 'ADMIN') {
+    return res.status(403).json({ success: false, message: 'Forbidden: Direct activation is restricted to administrators' });
+  }
+
   const method = req.method;
   if (method !== 'POST') {
     res.setHeader('Allow', ['POST']);
@@ -26,7 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Subscription activated successfully',
       data: subscription,
     });
-  } catch (err: any) {
-    return res.status(400).json({ success: false, message: err.message });
+  } catch (err: unknown) {
+    return res.status(400).json({ success: false, message: err instanceof Error ? err.message : 'Subscription activation failed' });
   }
 }

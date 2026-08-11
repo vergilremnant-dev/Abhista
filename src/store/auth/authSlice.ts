@@ -1,14 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { authService } from '../../services/auth/authService'
+import { setAccessToken } from '../../services/auth/axiosClient'
 import type { AuthState, AuthUser, LoginRequest, LoginResponse } from '../../types/auth/authTypes'
 
 function readStoredUser() {
   const rawUser = localStorage.getItem('user')
-
-  if (!rawUser) {
-    return null
-  }
-
+  if (!rawUser) return null
   try {
     return JSON.parse(rawUser) as AuthUser
   } catch {
@@ -17,13 +14,11 @@ function readStoredUser() {
   }
 }
 
-function persistAuth(loginResponse: LoginResponse) {
-  localStorage.setItem('accessToken', loginResponse.accessToken)
-  localStorage.setItem('user', JSON.stringify(loginResponse.user))
+function persistUser(user: AuthUser) {
+  localStorage.setItem('user', JSON.stringify(user))
 }
 
 function clearStoredAuth() {
-  localStorage.removeItem('accessToken')
   localStorage.removeItem('user')
 }
 
@@ -31,15 +26,12 @@ function toErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback
 }
 
-const storedToken = localStorage.getItem('accessToken')
-const storedUser = readStoredUser()
-
 const initialState: AuthState = {
-  accessToken: storedToken,
-  user: storedUser,
+  accessToken: null,
+  user: readStoredUser(),
   loading: false,
   error: null,
-  isAuthenticated: Boolean(storedToken),
+  isAuthenticated: false,
 }
 
 export const loginThunk = createAsyncThunk<LoginResponse, LoginRequest, { rejectValue: string }>(
@@ -47,10 +39,40 @@ export const loginThunk = createAsyncThunk<LoginResponse, LoginRequest, { reject
   async (request, { rejectWithValue }) => {
     try {
       const response = await authService.login(request)
-      persistAuth(response)
+      persistUser(response.user)
       return response
     } catch (error) {
       return rejectWithValue(toErrorMessage(error, 'Unable to login'))
+    }
+  },
+)
+
+export const logoutThunk = createAsyncThunk<void, void, { rejectValue: string }>(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await authService.logout()
+      clearStoredAuth()
+      setAccessToken(null)
+    } catch (error) {
+      clearStoredAuth()
+      setAccessToken(null)
+      return rejectWithValue(toErrorMessage(error, 'Unable to logout'))
+    }
+  },
+)
+
+export const refreshThunk = createAsyncThunk<LoginResponse, void, { rejectValue: string }>(
+  'auth/refresh',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await authService.refresh()
+      persistUser(response.user)
+      return response
+    } catch (error) {
+      clearStoredAuth()
+      setAccessToken(null)
+      return rejectWithValue(toErrorMessage(error, 'Session expired'))
     }
   },
 )
@@ -61,18 +83,16 @@ const authSlice = createSlice({
   reducers: {
     logout(state) {
       clearStoredAuth()
+      setAccessToken(null)
       state.accessToken = null
       state.user = null
       state.loading = false
       state.error = null
       state.isAuthenticated = false
     },
-    setUser(state, action: { payload: AuthUser }) {
-      localStorage.setItem('user', JSON.stringify(action.payload))
-      state.user = action.payload
-    },
     clearAuth(state) {
       clearStoredAuth()
+      setAccessToken(null)
       state.accessToken = null
       state.user = null
       state.loading = false
@@ -97,8 +117,39 @@ const authSlice = createSlice({
         state.error = action.payload ?? 'Unable to login'
         state.isAuthenticated = false
       })
+      .addCase(logoutThunk.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(logoutThunk.fulfilled, (state) => {
+        state.loading = false
+        state.accessToken = null
+        state.user = null
+        state.isAuthenticated = false
+      })
+      .addCase(logoutThunk.rejected, (state) => {
+        state.loading = false
+        state.accessToken = null
+        state.user = null
+        state.isAuthenticated = false
+      })
+      .addCase(refreshThunk.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(refreshThunk.fulfilled, (state, action) => {
+        state.loading = false
+        state.accessToken = action.payload.accessToken
+        state.user = action.payload.user
+        state.isAuthenticated = true
+      })
+      .addCase(refreshThunk.rejected, (state) => {
+        state.loading = false
+        state.accessToken = null
+        state.user = null
+        state.isAuthenticated = false
+      })
   },
 })
 
-export const { clearAuth, logout, setUser } = authSlice.actions
+export const { clearAuth, logout } = authSlice.actions
 export const authReducer = authSlice.reducer

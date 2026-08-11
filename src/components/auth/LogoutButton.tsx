@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuthDispatch } from '../../hooks/auth/useAuthStore'
-import { logout } from '../../store/auth/authSlice'
+import { logoutThunk } from '../../store/auth/authSlice'
 
 export function LogoutButton() {
   const dispatch = useAuthDispatch()
   const navigate = useNavigate()
 
   function handleLogout() {
-    dispatch(logout())
+    dispatch(logoutThunk())
     navigate('/login', { replace: true })
   }
 

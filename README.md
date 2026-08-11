@@ -1,73 +1,125 @@
-# React + TypeScript + Vite
+# DBC Abhista — Digital Building & Construction Marketplace
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DBC Abhista is an end-to-end professional marketplace and project coordination platform connecting property owners with certified construction contractors, architects, civil engineers, structural consultants, and trade specialists.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🏗️ Technology Stack
 
-## React Compiler
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4, Redux Toolkit, React Router v7
+- **Backend / APIs**: Node.js & TypeScript Serverless API Gateway (`api/`), Prisma ORM (`@prisma/client`)
+- **Database**: PostgreSQL (Supabase with connection pooling & transaction modes)
+- **Payment Gateway**: Razorpay (Server-side HMAC-SHA256 signature verification)
+- **Testing & Quality**: Vitest, ESLint, TypeScript Strict Compiler (`tsc`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📁 Repository Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+.
+├── api/                     # Backend Serverless REST Endpoints
+│   ├── admin/               # Admin analytics, reviews, users, verification
+│   ├── auth/                # Authentication (JWT, refresh, sessions)
+│   ├── bookings/            # Booking management & scheduling
+│   ├── search/              # Professional & service discovery engine
+│   ├── services/            # Business logic, pricing engine & DB transactions
+│   ├── subscriptions/       # Razorpay order generation & payment verification
+│   └── utils/               # Prisma DB instance, env validator, rate limiter, cache
+├── prisma/                  # Prisma Database Schema & Seed scripts
+│   ├── schema.prisma        # Complete database schema
+│   └── seed.js              # Initial database seed script
+├── public/                  # Public assets, brand icons, manifest, favicon
+├── src/                     # React Frontend Application
+│   ├── assets/              # Branding SVG logos & illustrations
+│   ├── components/          # Reusable UI components & layouts
+│   ├── config/              # Application branding & system metadata
+│   ├── context/             # Global UI contexts (Navigation, City filters)
+│   ├── hooks/               # Custom hooks (useAuth, usePermission, Redux)
+│   ├── layouts/             # PublicLayout and WorkspaceLayout shells
+│   ├── pages/               # Marketplace, Workspace, Auth, Admin & Shared pages
+│   ├── routes/              # ProtectedRoute role-based access controller
+│   ├── services/            # Axios API service clients
+│   ├── store/               # Redux Toolkit state store & auth slice
+│   ├── types/               # TypeScript domain interfaces & DTOs
+│   └── utils/               # Formatting, cookies, and date helpers
+├── tests/                   # Vitest Automated Test Suite
+│   ├── backend/             # Auth, Search, Bookings, Subscriptions, Chat tests
+│   └── frontend/            # RBAC and client permission tests
+├── .env.example             # Environment variables template
+├── api-dev-server.js        # Local Express development proxy for serverless functions
+└── package.json             # Project dependencies and lifecycle scripts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Prerequisites
+- Node.js 18+ (Node 20+ recommended)
+- PostgreSQL / Supabase Database instance
+
+### 2. Installation
+```bash
+# Clone repository
+git clone https://github.com/Sanjaychagantipati/Abhista.git
+cd Abhista
+
+# Install dependencies
+npm install
 ```
+
+### 3. Environment Configuration
+Copy `.env.example` to `.env` and fill in your configuration:
+```bash
+cp .env.example .env
+```
+
+Required environment variables:
+```bash
+DATABASE_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres?sslmode=require"
+DIRECT_URL="postgresql://postgres.[REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres?sslmode=require"
+JWT_SECRET="your-strong-random-jwt-secret-min-32-chars"
+NODE_ENV="development"
+RAZORPAY_KEY_ID="rzp_test_xxxxxxxxxxxxxx"
+RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
+```
+
+### 4. Database Setup
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Seed sample data
+npm run seed
+```
+
+### 5. Running the Application
+```bash
+# Start Vite frontend and API dev server concurrently
+npm run dev
+```
+
+---
+
+## 🧪 Testing & Verification
+
+```bash
+# Run unit & integration test suites
+npm run test
+
+# Typecheck and production bundle build
+npm run build
+
+# Run linter
+npm run lint
+```
+
+---
+
+## 🔒 Security & RBAC
+
+- **Authentication**: Stateless JWT access tokens with secure HTTP-only refresh tokens.
+- **RBAC**: Enforced role-based access control across `ROLE_CUSTOMER`, `ROLE_PROVIDER`, and `ROLE_ADMIN`.
+- **Payment Integrity**: Razorpay secret is strictly server-side only with timing-safe HMAC-SHA256 signature verification.
+- **Environment Isolation**: Sensitive credentials are never committed or exposed to the client bundle.

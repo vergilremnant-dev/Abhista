@@ -19,6 +19,7 @@ export interface CustomerProfileRequest {
   city: string
   state: string
   pincode: string
+  profileImageUrl?: string | null
 }
 
 export interface ApiResponse<T> {

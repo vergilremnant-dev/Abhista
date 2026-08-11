@@ -7,6 +7,23 @@ export interface AuthenticatedUser {
   role: 'CUSTOMER' | 'PROVIDER' | 'ADMIN';
 }
 
+export function generateAccessToken(user: { id: string; email: string; role: string }): string {
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    throw new Error('JWT_SECRET environment variable is missing');
+  }
+
+  return jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    jwtSecret,
+    { expiresIn: '15m' } // 15 minutes Access Token
+  );
+}
+
 export function verifyToken(req: VercelRequest): AuthenticatedUser | null {
   try {
     const authHeader = req.headers.authorization;
@@ -16,7 +33,7 @@ export function verifyToken(req: VercelRequest): AuthenticatedUser | null {
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as AuthenticatedUser;
     return decoded;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

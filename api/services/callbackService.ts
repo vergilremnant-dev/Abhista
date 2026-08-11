@@ -1,10 +1,25 @@
 import { db } from '../utils/db.js';
 import { CallbackStatus } from '@prisma/client';
 
+export interface CreateCallbackInput {
+  fullName: string;
+  phoneNumber: string;
+  email?: string;
+  city?: string;
+  state?: string;
+  preferredLanguage?: string;
+  serviceCategoryId?: string | number;
+  projectType?: string;
+  estimatedBudget?: string | number;
+  preferredCallTime?: string;
+  message?: string;
+  source?: string;
+}
+
 /**
  * Creates a new callback request lead.
  */
-export async function createCallbackRequest(input: any) {
+export async function createCallbackRequest(input: CreateCallbackInput) {
   if (!input.fullName || !input.fullName.trim()) {
     throw new Error('Full name is required');
   }

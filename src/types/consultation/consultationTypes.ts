@@ -1,4 +1,4 @@
-import type { CustomerProfile } from '../auth/authTypes';
+import type { CustomerProfile } from '../customer/customerProfileTypes';
 import type { ProviderProfile } from '../provider/providerTypes';
 
 export type ConsultationStatus = 'REQUESTED' | 'ACCEPTED' | 'RESCHEDULED' | 'COMPLETED' | 'CANCELLED';

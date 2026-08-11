@@ -5,13 +5,24 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import { store } from './store'
+import { NavigationProvider } from './context/NavigationContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <NavigationProvider>
+          <App />
+        </NavigationProvider>
       </BrowserRouter>
     </Provider>
   </StrictMode>,
-)
+);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.error('Service Worker registration failed:', err);
+    });
+  });
+}

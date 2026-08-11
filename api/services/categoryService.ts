@@ -10,27 +10,72 @@ export interface CategoryInput {
   icon?: string | null;
   parentId?: number | null;
   isActive?: boolean;
+  isFeatured?: boolean;
   displayOrder?: number;
 }
 
 export async function getActiveCategories() {
   return await db.serviceCategory.findMany({
-    where: { isActive: true },
+    where: { isActive: true, deletedAt: null },
+    orderBy: { displayOrder: 'asc' },
+  });
+}
+
+export async function getCategoryTree() {
+  return await db.serviceCategory.findMany({
+    where: {
+      parentId: null,
+      isActive: true,
+      deletedAt: null,
+    },
+    include: {
+      children: {
+        where: {
+          isActive: true,
+          deletedAt: null,
+        },
+        orderBy: { displayOrder: 'asc' },
+        include: {
+          children: {
+            where: {
+              isActive: true,
+              deletedAt: null,
+            },
+            orderBy: { displayOrder: 'asc' },
+          },
+        },
+      },
+    },
+    orderBy: { displayOrder: 'asc' },
+  });
+}
+
+export async function getFeaturedCategories() {
+  return await db.serviceCategory.findMany({
+    where: {
+      isFeatured: true,
+      isActive: true,
+      deletedAt: null,
+    },
     orderBy: { displayOrder: 'asc' },
   });
 }
 
 export async function getCategoryBySlug(slug: string) {
-  return await db.serviceCategory.findUnique({
-    where: { slug },
+  return await db.serviceCategory.findFirst({
+    where: { slug, deletedAt: null },
+    include: {
+      children: {
+        where: { isActive: true, deletedAt: null },
+        orderBy: { displayOrder: 'asc' },
+      },
+    },
   });
 }
 
 export async function createCategory(input: CategoryInput) {
-  // 1. Validations
   validateCategoryInput(input);
 
-  // 2. Check Name Uniqueness
   const existingName = await db.serviceCategory.findUnique({
     where: { name: input.name },
   });
@@ -38,7 +83,6 @@ export async function createCategory(input: CategoryInput) {
     throw new Error('Category name already exists');
   }
 
-  // 3. Check Slug Uniqueness
   const existingSlug = await db.serviceCategory.findUnique({
     where: { slug: input.slug },
   });
@@ -46,7 +90,15 @@ export async function createCategory(input: CategoryInput) {
     throw new Error('Category slug already exists');
   }
 
-  // 4. Create Category
+  if (input.parentId) {
+    const parentExists = await db.serviceCategory.findUnique({
+      where: { id: input.parentId },
+    });
+    if (!parentExists) {
+      throw new Error('Specified parent category does not exist');
+    }
+  }
+
   return await db.serviceCategory.create({
     data: {
       name: input.name,
@@ -57,13 +109,13 @@ export async function createCategory(input: CategoryInput) {
       icon: input.icon,
       parentId: input.parentId,
       isActive: input.isActive !== undefined ? input.isActive : true,
+      isFeatured: input.isFeatured !== undefined ? input.isFeatured : false,
       displayOrder: input.displayOrder !== undefined ? input.displayOrder : 0,
     },
   });
 }
 
 export async function updateCategory(id: number, input: Partial<CategoryInput>) {
-  // 1. Check if category exists
   const existingCategory = await db.serviceCategory.findUnique({
     where: { id },
   });
@@ -71,7 +123,6 @@ export async function updateCategory(id: number, input: Partial<CategoryInput>) 
     throw new Error('Category not found');
   }
 
-  // 2. Validate partial inputs
   if (input.categoryType) {
     validateCategoryType(input.categoryType);
   }
@@ -82,7 +133,6 @@ export async function updateCategory(id: number, input: Partial<CategoryInput>) 
     throw new Error('Category slug cannot be blank');
   }
 
-  // 3. Check name uniqueness if changed
   if (input.name && input.name !== existingCategory.name) {
     const conflictName = await db.serviceCategory.findUnique({
       where: { name: input.name },
@@ -92,7 +142,6 @@ export async function updateCategory(id: number, input: Partial<CategoryInput>) 
     }
   }
 
-  // 4. Check slug uniqueness if changed
   if (input.slug && input.slug !== existingCategory.slug) {
     const conflictSlug = await db.serviceCategory.findUnique({
       where: { slug: input.slug },
@@ -102,7 +151,18 @@ export async function updateCategory(id: number, input: Partial<CategoryInput>) 
     }
   }
 
-  // 5. Update category
+  if (input.parentId) {
+    if (input.parentId === id) {
+      throw new Error('Category cannot be its own parent');
+    }
+    const parentExists = await db.serviceCategory.findUnique({
+      where: { id: input.parentId },
+    });
+    if (!parentExists) {
+      throw new Error('Specified parent category does not exist');
+    }
+  }
+
   return await db.serviceCategory.update({
     where: { id },
     data: {
@@ -112,15 +172,25 @@ export async function updateCategory(id: number, input: Partial<CategoryInput>) 
       description: input.description,
       imageUrl: input.imageUrl,
       icon: input.icon,
-      parentId: input.parentId,
+      parentId: input.parentId !== undefined ? input.parentId : undefined,
       isActive: input.isActive,
+      isFeatured: input.isFeatured,
       displayOrder: input.displayOrder,
     },
   });
 }
 
+export async function reorderCategories(orders: { id: number; displayOrder: number }[]) {
+  const updates = orders.map((o) =>
+    db.serviceCategory.update({
+      where: { id: o.id },
+      data: { displayOrder: o.displayOrder },
+    })
+  );
+  return await db.$transaction(updates);
+}
+
 export async function deleteCategory(id: number) {
-  // Check if category exists
   const existingCategory = await db.serviceCategory.findUnique({
     where: { id },
   });
@@ -128,12 +198,26 @@ export async function deleteCategory(id: number) {
     throw new Error('Category not found');
   }
 
-  return await db.serviceCategory.delete({
+  return await db.serviceCategory.update({
     where: { id },
+    data: { deletedAt: new Date(), isActive: false },
   });
 }
 
-// Validation Helpers
+export async function restoreCategory(id: number) {
+  const existingCategory = await db.serviceCategory.findUnique({
+    where: { id },
+  });
+  if (!existingCategory) {
+    throw new Error('Category not found');
+  }
+
+  return await db.serviceCategory.update({
+    where: { id },
+    data: { deletedAt: null, isActive: true },
+  });
+}
+
 function validateCategoryInput(input: CategoryInput) {
   if (!input.name || input.name.trim() === '') {
     throw new Error('Category name is required');

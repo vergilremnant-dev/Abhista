@@ -1,26 +1,35 @@
 interface ProfileCompletionStatusProps {
-  isComplete: boolean
+  percentage: number;
+  missingFields: string[];
 }
 
-export function ProfileCompletionStatus({ isComplete }: ProfileCompletionStatusProps) {
+export function ProfileCompletionStatus({ percentage, missingFields }: ProfileCompletionStatusProps) {
   return (
-    <section className="rounded-lg border border-stone-200 bg-white p-5 shadow-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-stone-950">Profile Status</h2>
-          <p className="mt-1 text-sm text-stone-600">
-            {isComplete ? 'Complete and ready for requirements.' : 'Incomplete'}
-          </p>
-        </div>
-        <span
-          className={[
-            'inline-flex w-fit rounded-full px-3 py-1 text-sm font-medium',
-            isComplete ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800',
-          ].join(' ')}
-        >
-          {isComplete ? 'Complete' : 'Needs profile'}
-        </span>
+    <section className="rounded-xl border border-stone-200 bg-stone-50/50 p-5 space-y-3">
+      <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-stone-500">
+        <h4 className="font-serif text-stone-900 text-sm normal-case">Profile Completeness Status</h4>
+        <span className="text-emerald-850 font-extrabold text-sm">{percentage}%</span>
       </div>
+      
+      <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+        <div 
+          className="bg-emerald-700 h-full rounded-full transition-all duration-500" 
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+
+      {missingFields.length > 0 ? (
+        <div className="text-[10px] text-amber-800 font-semibold space-y-1 pt-1">
+          <p className="font-bold uppercase tracking-wider text-[9px] text-stone-400">Missing required profile inputs:</p>
+          <ul className="list-disc pl-4 space-y-0.5">
+            {missingFields.map((field) => (
+              <li key={field}>{field}</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p className="text-[10px] text-emerald-800 font-bold">✓ Profile is fully complete and active!</p>
+      )}
     </section>
-  )
+  );
 }

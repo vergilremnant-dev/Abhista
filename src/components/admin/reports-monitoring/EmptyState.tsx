@@ -1,0 +1,57 @@
+interface EmptyStateProps {
+  type?: 'data' | 'activity' | 'reports' | string;
+  onResetFilters?: () => void;
+}
+
+export default function EmptyState({ type = 'data', onResetFilters }: EmptyStateProps) {
+  const getContent = () => {
+    switch (type) {
+      case 'activity':
+        return {
+          icon: '📉',
+          title: 'No Platform Activity Recorded',
+          description: 'No new registrations, project updates, or quotations were registered during this filter timeframe.',
+        };
+      case 'reports':
+        return {
+          icon: '📊',
+          title: 'No Reports Configuration',
+          description: 'Platform metrics database index failed to fetch logs or reports parameters.',
+        };
+      case 'data':
+      default:
+        return {
+          icon: '📁',
+          title: 'No Data Available',
+          description: 'No registered records match the current filter selection (role, categories, location, or status).',
+        };
+    }
+  };
+
+  const info = getContent();
+
+  return (
+    <div className="bg-white border border-light-border p-8 rounded-3xl text-center space-y-4 shadow-apple-sm max-w-md mx-auto my-8 select-none animate-gentle-fade">
+      <span className="text-3xl block" role="img" aria-hidden="true">
+        {info.icon}
+      </span>
+      <div className="space-y-1">
+        <h4 className="text-xs font-black text-stone-900 uppercase tracking-widest">
+          {info.title}
+        </h4>
+        <p className="text-[10px] text-stone-500 font-medium leading-relaxed">
+          {info.description}
+        </p>
+      </div>
+      {onResetFilters && (
+        <button
+          onClick={onResetFilters}
+          className="px-4 py-2 bg-brand-emerald hover:bg-emerald-800 text-white rounded-xl text-[9px] font-black uppercase tracking-wider transition cursor-pointer"
+        >
+          Reset Filters
+        </button>
+      )}
+    </div>
+  );
+}
+export type { EmptyStateProps };

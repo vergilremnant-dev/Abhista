@@ -1,0 +1,29 @@
+<svg viewBox="0 0 180 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+    <g id="house-icon">
+      <path d="M8 22L24 8L40 22V38H8V22Z" stroke="#FFFFFF" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" />
+      <line x1="24" y1="28" x2="24" y2="8" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="8" y2="22" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="40" y2="22" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="8" y2="38" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="40" y2="38" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <circle cx="24" cy="28" r="8" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="3 3" opacity="0.4" />
+      <circle cx="24" cy="28" r="3.5" fill="#FFFFFF" />
+    </g>
+  
+  
+  <g id="wordmark">
+    <!-- Letter D -->
+    <path d="M52 14V32H61C66.5 32 70 28.5 70 23C70 17.5 66.5 14 61 14H52ZM57 18H60.5C63.5 18 65 19.5 65 23C65 26.5 63.5 28 60.5 28H57V18Z" fill="#FFFFFF" />
+    <!-- Letter B -->
+    <path d="M78 14V32H87.5C92 32 95 29.5 95 26.5C95 24.5 93.5 23 91.5 22.5C93 22 94 20.5 94 19C94 16.5 91.5 14 87.5 14H78ZM83 18H86.5C88.5 18 89.5 18.5 89.5 20C89.5 21.5 88.5 22 86.5 22H83V18ZM83 25H87C89 25 90 25.5 90 27.5C90 29.5 89 30 87 30H83V25Z" fill="#FFFFFF" />
+    <!-- Letter C -->
+    <path d="M112 14.5C104.5 14.5 101.5 19 101.5 23C101.5 27 104.5 31.5 112 31.5C116.5 31.5 119.5 29.5 120 26H115C114.5 27 113.5 27.5 112 27.5C108.5 27.5 106.5 25 106.5 23C106.5 21 108.5 18.5 112 18.5C113.5 18.5 114.5 19 115 20H120C119.5 16.5 116.5 14.5 112 14.5Z" fill="#FFFFFF" />
+  </g>
+
+  
+  <text x="52" y="42" text-anchor="start" fill="#9CA3AF" font-size="5.5" font-weight="950" letter-spacing="2.2" font-family="system-ui, -apple-system, sans-serif">
+    DESIGN · BUILD · CONNECT
+  </text>
+
+</svg>

@@ -1,0 +1,16 @@
+{
+  "name": "DBC Design Build Connect",
+  "short_name": "DBC",
+  "start_url": "/workspace/mobile-pwa",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "description": "Premium digital ecosystem for homeowners, architects, and contractors.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

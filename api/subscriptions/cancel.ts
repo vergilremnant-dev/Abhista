@@ -21,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       message: 'Subscription cancelled successfully',
       data: subscription,
     });
-  } catch (err: any) {
-    return res.status(400).json({ success: false, message: err.message });
+  } catch (err: unknown) {
+    return res.status(400).json({ success: false, message: err instanceof Error ? err.message : 'Subscription cancellation failed' });
   }
 }

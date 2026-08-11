@@ -27,6 +27,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const requirements = await db.requirement.findMany({
       where: { customerId: customerProfile.id },
       orderBy: { createdAt: 'desc' },
+      include: {
+        attachments: true,
+        _count: {
+          select: { notes: true, history: true },
+        },
+      },
     });
 
     return res.status(200).json({ success: true, data: requirements });

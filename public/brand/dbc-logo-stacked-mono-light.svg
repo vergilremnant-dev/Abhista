@@ -1,0 +1,31 @@
+<svg viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(56, 12)">
+    
+    <g id="house-icon">
+      <path d="M8 22L24 8L40 22V38H8V22Z" stroke="#1F2937" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" />
+      <line x1="24" y1="28" x2="24" y2="8" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="8" y2="22" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="40" y2="22" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="8" y2="38" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <line x1="24" y1="28" x2="40" y2="38" stroke="#1F2937" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.65" />
+      <circle cx="24" cy="28" r="8" stroke="#1F2937" stroke-width="1" stroke-dasharray="3 3" opacity="0.4" />
+      <circle cx="24" cy="28" r="3.5" fill="#1F2937" />
+    </g>
+  
+  </g>
+  
+  <g id="wordmark">
+    <!-- Letter D (centered on x=80) -->
+    <path d="M46 14V32H55C60.5 32 64 28.5 64 23C64 17.5 60.5 14 55 14H46ZM51.5 18H55C58.5 18 60 19.5 60 23C60 26.5 58.5 28 55 28H51.5V18Z" fill="#1F2937" />
+    <!-- Letter B (centered on x=80) -->
+    <path d="M72 14V32H81.5C86 32 89 29.5 89 26.5C89 24.5 87.5 23 85.5 22.5C87 22 88 20.5 88 19C88 16.5 85.5 14 81.5 14H72ZM77 18H80.5C82.5 18 83.5 18.5 83.5 20C83.5 21.5 82.5 22 80.5 22H77V18ZM77 25H81C83 25 84 25.5 84 27.5C84 29.5 83 30 81 30H77V25Z" fill="#1F2937" />
+    <!-- Letter C (centered on x=80) -->
+    <path d="M106 14.5C98.5 14.5 95.5 19 95.5 23C95.5 27 98.5 31.5 106 31.5C110.5 31.5 113.5 29.5 114 26H109C108.5 27 107.5 27.5 106 27.5C102.5 27.5 100.5 25 100.5 23C100.5 21 102.5 18.5 106 18.5C107.5 18.5 108.5 19 109 20H114C113.5 16.5 110.5 14.5 106 14.5Z" fill="#1F2937" />
+  </g>
+
+  
+  <text x="80" y="102" text-anchor="middle" fill="#6B7280" font-size="5.5" font-weight="950" letter-spacing="2.2" font-family="system-ui, -apple-system, sans-serif">
+    DESIGN · BUILD · CONNECT
+  </text>
+
+</svg>

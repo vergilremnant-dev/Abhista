@@ -9,8 +9,22 @@ export interface ServiceCategory {
   imageUrl: string | null;
   icon: string | null;
   parentId: number | null;
+  children?: ServiceCategory[];
   isActive: boolean;
+  isFeatured: boolean;
   displayOrder: number;
+  workforceTypeId?: string | null;
+  workforceType?: WorkforceType | null;
+  deletedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkforceType {
+  id: string;
+  name: string;
+  displayName: string;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -24,6 +38,7 @@ export interface CreateCategoryRequest {
   icon?: string | null;
   parentId?: number | null;
   isActive?: boolean;
+  isFeatured?: boolean;
   displayOrder?: number;
 }
 
@@ -36,5 +51,6 @@ export interface UpdateCategoryRequest {
   icon?: string | null;
   parentId?: number | null;
   isActive?: boolean;
+  isFeatured?: boolean;
   displayOrder?: number;
 }

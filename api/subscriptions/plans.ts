@@ -11,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const plans = await getSubscriptionPlans(false);
     return res.status(200).json({ success: true, data: plans });
-  } catch (err: any) {
-    return res.status(500).json({ success: false, message: err.message });
+  } catch (err: unknown) {
+    return res.status(500).json({ success: false, message: err instanceof Error ? err.message : 'Internal Server Error' });
   }
 }

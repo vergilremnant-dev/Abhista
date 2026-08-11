@@ -60,4 +60,28 @@ export const subscriptionApi = {
     );
     return response.data.data;
   },
+
+  async createRazorpayOrder(planId: number): Promise<{ orderId: string; amount: number; currency: string; keyId: string }> {
+    const response = await axiosClient.post<{
+      success: boolean;
+      data: { orderId: string; amount: number; currency: string; keyId: string };
+    }>('/api/subscriptions/create-order', { planId });
+    return response.data.data;
+  },
+
+  async verifyRazorpayPayment(
+    razorpayOrderId: string,
+    razorpayPaymentId: string,
+    razorpaySignature: string
+  ): Promise<UserSubscription> {
+    const response = await axiosClient.post<{
+      success: boolean;
+      data: UserSubscription;
+    }>('/api/subscriptions/verify-payment', {
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature,
+    });
+    return response.data.data;
+  },
 };

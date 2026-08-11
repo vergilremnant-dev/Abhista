@@ -95,7 +95,7 @@ export const consultationApi = {
     return response.data.data;
   },
 
-  async adminUpdateConsultation(id: string, data: any): Promise<ConsultationBooking> {
+  async adminUpdateConsultation(id: string, data: Partial<ConsultationBooking>): Promise<ConsultationBooking> {
     const response = await axiosClient.patch<{ success: boolean; data: ConsultationBooking }>(
       `/api/admin/consultations/${id}`,
       data
@@ -103,4 +103,4 @@ export const consultationApi = {
     return response.data.data;
   },
 };
-export { ConsultationBooking, ConsultationAvailability, CreateConsultationRequest };
+export type { ConsultationBooking, ConsultationAvailability, CreateConsultationRequest };

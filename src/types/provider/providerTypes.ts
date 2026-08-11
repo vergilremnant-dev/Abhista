@@ -29,9 +29,11 @@ export interface ProviderProfile {
     id: number;
     name: string;
     slug: string;
+    categoryType?: string;
+    workforceTypeId?: string;
   } | null;
-  portfolios?: any[];
-  reviews?: any[];
+  portfolios?: unknown[];
+  reviews?: unknown[];
 }
 
 export interface CreateProviderRequest {

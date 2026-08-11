@@ -4,7 +4,7 @@ export interface SubscriptionPlan {
   price: number;
   durationDays: number;
   description: string | null;
-  features: any;
+  features: unknown;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -29,7 +29,7 @@ export interface CreatePlanRequest {
   price: number;
   durationDays: number;
   description?: string | null;
-  features?: any;
+  features?: unknown;
 }
 
 export interface UpdatePlanRequest {
@@ -37,6 +37,6 @@ export interface UpdatePlanRequest {
   price?: number;
   durationDays?: number;
   description?: string | null;
-  features?: any;
+  features?: unknown;
   isActive?: boolean;
 }

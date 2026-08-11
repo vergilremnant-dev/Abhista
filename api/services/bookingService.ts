@@ -123,8 +123,13 @@ export async function getProviderBookings(providerId: string) {
 }
 
 export async function getBookingById(id: string) {
-  const booking = await db.booking.findUnique({
-    where: { id },
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id },
+        { bookingNumber: id },
+      ],
+    },
     include: {
       customer: true,
       provider: true,
@@ -140,9 +145,14 @@ export async function getBookingById(id: string) {
 }
 
 export async function cancelBooking(bookingId: string, customerId: string) {
-  const booking = await db.booking.findUnique({
-    where: { id: bookingId },
-    include: { provider: true },
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id: bookingId },
+        { bookingNumber: bookingId },
+      ],
+    },
+    include: { provider: true, customer: true },
   });
 
   if (!booking) {
@@ -154,27 +164,34 @@ export async function cancelBooking(bookingId: string, customerId: string) {
   }
 
   const updated = await db.booking.update({
-    where: { id: bookingId },
+    where: { id: booking.id },
     data: { bookingStatus: BookingStatus.CANCELLED },
-    include: { provider: true, customer: true },
+    include: { provider: true, customer: true, category: true },
   });
 
   // Trigger Notification for Provider
-  await db.notification.create({
-    data: {
-      userId: booking.provider.userId,
-      title: 'Booking Cancelled',
-      content: `Booking request ${booking.bookingNumber} was cancelled by the customer.`,
-    },
-  });
+  if (booking.provider?.userId) {
+    await db.notification.create({
+      data: {
+        userId: booking.provider.userId,
+        title: 'Booking Cancelled',
+        content: `Booking request ${booking.bookingNumber} was cancelled by the customer.`,
+      },
+    });
+  }
 
   return updated;
 }
 
 export async function acceptBooking(bookingId: string, providerId: string) {
-  const booking = await db.booking.findUnique({
-    where: { id: bookingId },
-    include: { customer: true },
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id: bookingId },
+        { bookingNumber: bookingId },
+      ],
+    },
+    include: { customer: true, provider: true },
   });
 
   if (!booking) {
@@ -186,27 +203,34 @@ export async function acceptBooking(bookingId: string, providerId: string) {
   }
 
   const updated = await db.booking.update({
-    where: { id: bookingId },
+    where: { id: booking.id },
     data: { bookingStatus: BookingStatus.ACCEPTED },
-    include: { customer: true, provider: true },
+    include: { customer: true, provider: true, category: true },
   });
 
   // Trigger Notification for Customer
-  await db.notification.create({
-    data: {
-      userId: booking.customer.userId,
-      title: 'Booking Accepted',
-      content: `Your booking request ${booking.bookingNumber} has been accepted by ${updated.provider.fullName}.`,
-    },
-  });
+  if (booking.customer?.userId) {
+    await db.notification.create({
+      data: {
+        userId: booking.customer.userId,
+        title: 'Booking Accepted',
+        content: `Your booking request ${booking.bookingNumber} has been accepted by ${updated.provider.fullName}.`,
+      },
+    });
+  }
 
   return updated;
 }
 
 export async function rejectBooking(bookingId: string, providerId: string) {
-  const booking = await db.booking.findUnique({
-    where: { id: bookingId },
-    include: { customer: true },
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id: bookingId },
+        { bookingNumber: bookingId },
+      ],
+    },
+    include: { customer: true, provider: true },
   });
 
   if (!booking) {
@@ -218,26 +242,34 @@ export async function rejectBooking(bookingId: string, providerId: string) {
   }
 
   const updated = await db.booking.update({
-    where: { id: bookingId },
+    where: { id: booking.id },
     data: { bookingStatus: BookingStatus.REJECTED },
-    include: { customer: true, provider: true },
+    include: { customer: true, provider: true, category: true },
   });
 
   // Trigger Notification for Customer
-  await db.notification.create({
-    data: {
-      userId: booking.customer.userId,
-      title: 'Booking Rejected',
-      content: `Your booking request ${booking.bookingNumber} has been declined by ${updated.provider.fullName}.`,
-    },
-  });
+  if (booking.customer?.userId) {
+    await db.notification.create({
+      data: {
+        userId: booking.customer.userId,
+        title: 'Booking Rejected',
+        content: `Your booking request ${booking.bookingNumber} has been declined by ${updated.provider.fullName}.`,
+      },
+    });
+  }
 
   return updated;
 }
 
 export async function startBooking(bookingId: string, providerId: string) {
-  const booking = await db.booking.findUnique({
-    where: { id: bookingId },
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id: bookingId },
+        { bookingNumber: bookingId },
+      ],
+    },
+    include: { customer: true, provider: true },
   });
 
   if (!booking) {
@@ -248,16 +280,35 @@ export async function startBooking(bookingId: string, providerId: string) {
     throw new Error('Unauthorized: You can only start bookings assigned to you');
   }
 
-  return await db.booking.update({
-    where: { id: bookingId },
+  const updated = await db.booking.update({
+    where: { id: booking.id },
     data: { bookingStatus: BookingStatus.IN_PROGRESS },
+    include: { customer: true, provider: true, category: true },
   });
+
+  // Trigger Notification for Customer
+  if (booking.customer?.userId) {
+    await db.notification.create({
+      data: {
+        userId: booking.customer.userId,
+        title: 'Booking In Progress',
+        content: `Your booking ${booking.bookingNumber} has been started by ${updated.provider.fullName}.`,
+      },
+    });
+  }
+
+  return updated;
 }
 
 export async function completeBooking(bookingId: string, providerId: string) {
-  const booking = await db.booking.findUnique({
-    where: { id: bookingId },
-    include: { customer: true },
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id: bookingId },
+        { bookingNumber: bookingId },
+      ],
+    },
+    include: { customer: true, provider: true },
   });
 
   if (!booking) {
@@ -269,19 +320,31 @@ export async function completeBooking(bookingId: string, providerId: string) {
   }
 
   const updated = await db.booking.update({
-    where: { id: bookingId },
+    where: { id: booking.id },
     data: { bookingStatus: BookingStatus.COMPLETED },
-    include: { customer: true, provider: true },
+    include: { customer: true, provider: true, category: true },
   });
 
+  // Increment provider total bookings
+  try {
+    await db.providerProfile.update({
+      where: { id: providerId },
+      data: { totalBookings: { increment: 1 } },
+    });
+  } catch (e) {
+    console.error('Failed to increment provider totalBookings:', e);
+  }
+
   // Trigger Notification for Customer
-  await db.notification.create({
-    data: {
-      userId: booking.customer.userId,
-      title: 'Booking Completed',
-      content: `The booking request ${booking.bookingNumber} has been marked as completed by ${updated.provider.fullName}.`,
-    },
-  });
+  if (booking.customer?.userId) {
+    await db.notification.create({
+      data: {
+        userId: booking.customer.userId,
+        title: 'Booking Completed',
+        content: `The booking request ${booking.bookingNumber} has been marked as completed by ${updated.provider.fullName}.`,
+      },
+    });
+  }
 
   return updated;
 }
@@ -301,17 +364,29 @@ export async function adminGetBookings() {
 }
 
 export async function adminUpdateBookingStatus(id: string, status: string) {
-  if (!Object.values(BookingStatus).includes(status as any)) {
+  if (!Object.values(BookingStatus).includes(status as BookingStatus)) {
     throw new Error('Invalid booking status');
   }
 
-  const booking = await db.booking.findUnique({ where: { id } });
+  const booking = await db.booking.findFirst({
+    where: {
+      OR: [
+        { id },
+        { bookingNumber: id },
+      ],
+    },
+  });
   if (!booking) {
     throw new Error('Booking not found');
   }
 
   return await db.booking.update({
-    where: { id },
+    where: { id: booking.id },
     data: { bookingStatus: status as BookingStatus },
+    include: {
+      customer: true,
+      provider: true,
+      category: true,
+    },
   });
 }
