@@ -2,8 +2,8 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { trackArticleInteraction } from '../../services/articleService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const { id } = req.query;
-  const articleId = Array.isArray(id) ? id[0] : id;
+  const { slug } = req.query;
+  const articleId = Array.isArray(slug) ? slug[0] : slug;
 
   if (!articleId) {
     return res.status(400).json({ success: false, message: 'Article ID is required' });
