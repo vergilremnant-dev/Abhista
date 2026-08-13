@@ -149,6 +149,7 @@ export function Navbar() {
           { label: 'Leads', to: '/workspace/leads' },
           { label: 'My Projects', to: '/workspace/projects' },
           { label: 'Bookings', to: '/workspace/bookings' },
+          { label: 'Subscription', to: '/subscriptions' },
         ];
       }
       if (normRole.includes('ADMIN')) {
@@ -157,6 +158,7 @@ export function Navbar() {
           { label: 'Dashboard', to: '/admin/dashboard' },
           { label: 'Analytics', to: '/admin/analytics' },
           { label: 'Bookings', to: '/workspace/bookings' },
+          { label: 'Subscription', to: '/subscriptions' },
         ];
       }
       // Customer role (default for authenticated customer)
@@ -165,6 +167,7 @@ export function Navbar() {
         { label: 'Dashboard', to: '/workspace/overview' },
         { label: 'Requirements', to: '/workspace/requirements' },
         { label: 'Bookings', to: '/workspace/bookings' },
+        { label: 'Subscription', to: '/subscriptions' },
       ];
     }
     // Public / Logged-out navigation
