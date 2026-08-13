@@ -8,8 +8,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(401).json({ success: false, message: 'Unauthorized: Missing or invalid token' });
   }
 
-  const { conversationId } = req.query;
-  const paramConversationId = Array.isArray(conversationId) ? conversationId[0] : conversationId;
+  const { id } = req.query;
+  const paramConversationId = Array.isArray(id) ? id[0] : id;
 
   if (!paramConversationId) {
     return res.status(400).json({ success: false, message: 'Conversation ID parameter is required' });
