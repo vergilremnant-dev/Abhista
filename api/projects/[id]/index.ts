@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../_utils/auth.js';
-import { getProjectById, transitionProjectStatus } from '../../_services/projectService.js';
+import { verifyToken } from '../../../api-lib/utils/auth.js';
+import { getProjectById, transitionProjectStatus } from '../../../api-lib/services/projectService.js';
 import { ProjectStatus } from '@prisma/client';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Check ownership
       const isCustomer = project.customer.userId === user.id;
       const isProvider = project.provider.userId === user.id;
-      const isAssignedResource = project.resources.some((r) => r.userId === user.id);
+      const isAssignedResource = project.resources.some((r: any) => r.userId === user.id);
 
       if (!isCustomer && !isProvider && !isAssignedResource) {
         return res.status(403).json({ success: false, message: 'Forbidden: Unauthorized access to project workspace' });

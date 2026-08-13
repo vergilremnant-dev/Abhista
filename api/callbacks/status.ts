@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getCallbackStatus } from '../_services/callbackService.js';
+import { getCallbackStatus } from '../../api-lib/services/callbackService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

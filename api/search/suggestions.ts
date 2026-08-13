@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { db } from '../_utils/../_utils/db.js';
+import { db } from '../../api-lib/utils/db.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;
@@ -55,8 +55,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({
       success: true,
       suggestions: {
-        categories: categories.map(c => ({ id: c.id, name: c.name, type: 'category', slug: c.slug })),
-        professionals: professionals.map(p => ({ id: p.id, name: p.fullName, businessName: p.businessName, type: 'professional' })),
+        categories: categories.map((c: any) => ({ id: c.id, name: c.name, type: 'category', slug: c.slug })),
+        professionals: professionals.map((p: any) => ({ id: p.id, name: p.fullName, businessName: p.businessName, type: 'professional' })),
         locations: matchedLocations,
         popularSearches: ['Architect', 'Interior Designer', 'Plumber', 'Contractor'].filter(term => term.toLowerCase().includes(keyword)),
       },

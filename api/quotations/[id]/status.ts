@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../_utils/auth.js';
-import { transitionQuotationStatus } from '../../_services/quotationService.js';
+import { verifyToken } from '../../../api-lib/utils/auth.js';
+import { transitionQuotationStatus } from '../../../api-lib/services/quotationService.js';
 import { QuotationStatus } from '@prisma/client';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../_utils/../_utils/auth.js';
-import { db } from '../_utils/../_utils/db.js';
+import { verifyToken } from '../../api-lib/utils/auth.js';
+import { db } from '../../api-lib/utils/db.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = verifyToken(req);

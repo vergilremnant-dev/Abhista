@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../_utils/../_utils/auth.js';
-import { db } from '../_utils/../_utils/db.js';
+import { verifyToken } from '../../api-lib/utils/auth.js';
+import { db } from '../../api-lib/utils/db.js';
 import { QuotationStatus } from '@prisma/client';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -55,7 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // Structure comparison details
-    const comparison = quotations.map((q) => ({
+    const comparison = quotations.map((q: any) => ({
       quotationId: q.id,
       providerName: q.provider.fullName,
       businessName: q.provider.businessName,

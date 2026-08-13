@@ -1,7 +1,7 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
-import { getCategoryBySlug, updateCategory, deleteCategory } from '../_services/categoryService.js';
-import { requirePermission } from '../_middleware/permissionMiddleware.js';
+import { VercelRequestWithUser } from '../../api-lib/middleware/authMiddleware.js';
+import { getCategoryBySlug, updateCategory, deleteCategory } from '../../api-lib/services/categoryService.js';
+import { requirePermission } from '../../api-lib/middleware/permissionMiddleware.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const { slugOrId } = req.query;

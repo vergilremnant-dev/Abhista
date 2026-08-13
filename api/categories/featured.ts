@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getFeaturedCategories } from '../_services/categoryService.js';
+import { getFeaturedCategories } from '../../api-lib/services/categoryService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

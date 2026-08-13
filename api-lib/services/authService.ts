@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { db } from '../_utils/../_utils/db.js';
+import { db } from '../utils/db.js';
 import { Role } from '@prisma/client';
-import { generateAccessToken } from '../_utils/../_utils/auth.js';
+import { generateAccessToken } from '../utils/auth.js';
 import { logSecurityEvent } from './auditService.js';
 
 export interface LoginRequest {

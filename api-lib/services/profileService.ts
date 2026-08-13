@@ -1,7 +1,7 @@
-import { db } from '../_utils/../_utils/db.js';
+import { db } from '../utils/db.js';
 import { Role, VerificationStatus } from '@prisma/client';
-import { validateCustomerProfileInput, validateProviderProfileInput } from '../_utils/../_utils/validation.js';
-import { storage } from '../_utils/../_utils/storage.js';
+import { validateCustomerProfileInput, validateProviderProfileInput } from '../utils/validation.js';
+import { storage } from '../utils/storage.js';
 
 export async function getProfile(userId: string, role: Role) {
   if (role === Role.ADMIN) {

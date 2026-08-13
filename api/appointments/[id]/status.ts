@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../_utils/auth.js';
-import { transitionAppointmentStatus } from '../../_services/appointmentService.js';
+import { verifyToken } from '../../../api-lib/utils/auth.js';
+import { transitionAppointmentStatus } from '../../../api-lib/services/appointmentService.js';
 import { AppointmentStatus } from '@prisma/client';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

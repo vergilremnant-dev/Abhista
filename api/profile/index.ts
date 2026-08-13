@@ -1,7 +1,7 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
-import { requirePermission } from '../_middleware/permissionMiddleware.js';
-import { getProfile, upsertCustomerProfile, upsertProviderProfile } from '../_services/profileService.js';
+import { VercelRequestWithUser } from '../../api-lib/middleware/authMiddleware.js';
+import { requirePermission } from '../../api-lib/middleware/permissionMiddleware.js';
+import { getProfile, upsertCustomerProfile, upsertProviderProfile } from '../../api-lib/services/profileService.js';
 import { Role } from '@prisma/client';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {

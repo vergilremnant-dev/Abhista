@@ -1,8 +1,8 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
-import { getActiveCategories, createCategory } from '../_services/categoryService.js';
-import { requirePermission } from '../_middleware/permissionMiddleware.js';
-import { getCached, setCached, clearCache } from '../_utils/../_utils/cache.js';
+import { VercelRequestWithUser } from '../../api-lib/middleware/authMiddleware.js';
+import { getActiveCategories, createCategory } from '../../api-lib/services/categoryService.js';
+import { requirePermission } from '../../api-lib/middleware/permissionMiddleware.js';
+import { getCached, setCached, clearCache } from '../../api-lib/utils/cache.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

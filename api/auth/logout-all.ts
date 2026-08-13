@@ -1,7 +1,7 @@
 import { VercelResponse } from '@vercel/node';
-import { logoutAllUserSessions } from '../_services/authService.js';
-import { withAuth, VercelRequestWithUser } from '../_middleware/authMiddleware.js';
-import { clearCookie } from '../_utils/../_utils/cookies.js';
+import { logoutAllUserSessions } from '../../api-lib/services/authService.js';
+import { withAuth, VercelRequestWithUser } from '../../api-lib/middleware/authMiddleware.js';
+import { clearCookie } from '../../api-lib/utils/cookies.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

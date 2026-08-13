@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken, hasRole } from '../../../_utils/auth.js';
-import { db } from '../../../_utils/db.js';
-import { startBooking } from '../../../_services/bookingService.js';
+import { verifyToken, hasRole } from '../../../../api-lib/utils/auth.js';
+import { db } from '../../../../api-lib/utils/db.js';
+import { startBooking } from '../../../../api-lib/services/bookingService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = verifyToken(req);

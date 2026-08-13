@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { listArticles } from '../../_services/articleService.js';
+import { listArticles } from '../../../api-lib/services/articleService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { slug } = req.query;

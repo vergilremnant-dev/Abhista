@@ -1,7 +1,7 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
-import { requirePermission } from '../_middleware/permissionMiddleware.js';
-import { reorderCategories } from '../_services/categoryService.js';
+import { VercelRequestWithUser } from '../../api-lib/middleware/authMiddleware.js';
+import { requirePermission } from '../../api-lib/middleware/permissionMiddleware.js';
+import { reorderCategories } from '../../api-lib/services/categoryService.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

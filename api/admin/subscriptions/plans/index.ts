@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken, hasRole } from '../../../_utils/auth.js';
-import { adminCreatePlan } from '../../../_services/subscriptionService.js';
+import { verifyToken, hasRole } from '../../../../api-lib/utils/auth.js';
+import { adminCreatePlan } from '../../../../api-lib/services/subscriptionService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = verifyToken(req);

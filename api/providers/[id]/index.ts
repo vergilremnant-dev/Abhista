@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getProviderById } from '../../_services/providerService.js';
+import { getProviderById } from '../../../api-lib/services/providerService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
@@ -20,8 +20,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const profile = await getProviderById(paramId);
 
     // Subscription check to mask phone number
-    const { verifyToken } = await import('../../_utils/auth.js');
-    const { verifyActiveSubscription } = await import('../../_services/subscriptionService.js');
+    const { verifyToken } = await import('../../../api-lib/utils/auth.js');
+    const { verifyActiveSubscription } = await import('../../../api-lib/services/subscriptionService.js');
     
     const user = verifyToken(req);
     const hasActive = user ? (user.role === 'ADMIN' || user.id === profile.userId || await verifyActiveSubscription(user.id)) : false;

@@ -1,6 +1,6 @@
 import { VercelResponse } from '@vercel/node';
-import { getUserSessions, revokeUserSession } from '../_services/authService.js';
-import { withAuth, VercelRequestWithUser } from '../_middleware/authMiddleware.js';
+import { getUserSessions, revokeUserSession } from '../../api-lib/services/authService.js';
+import { withAuth, VercelRequestWithUser } from '../../api-lib/middleware/authMiddleware.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

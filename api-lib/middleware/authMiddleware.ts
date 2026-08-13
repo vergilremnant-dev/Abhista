@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken, hasRole, AuthenticatedUser } from '../_utils/../_utils/auth.js';
+import { verifyToken, hasRole, AuthenticatedUser } from '../utils/auth.js';
 
 export interface VercelRequestWithUser extends VercelRequest {
   user?: AuthenticatedUser;

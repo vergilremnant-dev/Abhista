@@ -5,8 +5,8 @@ import {
   getNewlyVerifiedProfessionals,
   getSimilarProfessionals,
   getRelatedServices
-} from '../_services/recommendationService.js';
-import { getCached, setCached } from '../_utils/../_utils/cache.js';
+} from '../../api-lib/services/recommendationService.js';
+import { getCached, setCached } from '../../api-lib/utils/cache.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

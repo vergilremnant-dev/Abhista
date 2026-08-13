@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSubscriptionPlans } from '../_services/subscriptionService.js';
+import { getSubscriptionPlans } from '../../api-lib/services/subscriptionService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

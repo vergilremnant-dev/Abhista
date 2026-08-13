@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { verifyToken } from './auth.js';
-import { verifyActiveSubscription } from '../_services/subscriptionService.js';
+import { verifyActiveSubscription } from '../services/subscriptionService.js';
 
 export async function requireActiveSubscription(req: VercelRequest, res: VercelResponse): Promise<boolean> {
   const user = verifyToken(req);

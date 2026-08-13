@@ -1,4 +1,4 @@
-import { db } from '../_utils/../_utils/db.js';
+import { db } from '../utils/db.js';
 import { VerificationStatus } from '@prisma/client';
 
 /**
