@@ -171,7 +171,13 @@ import chatMessagesFetchHandler from './routes/chat/messages/[conversationId].js
 import chatMessagesReadHandler from './routes/chat/messages/[id]/read.js';
 
 const app = express();
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.body !== undefined) {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 // Request adapter to map Express requests and responses to Vercel format
 const adapt = (handler) => async (req, res) => {
