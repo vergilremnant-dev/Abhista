@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { loginUser } from '../services/authService.js';
-import { setCookie } from '../utils/cookies.js';
-import { checkRateLimit } from '../utils/rateLimiter.js';
+import { loginUser } from '../_services/authService.js';
+import { setCookie } from '../_utils/../_utils/cookies.js';
+import { checkRateLimit } from '../_utils/../_utils/rateLimiter.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { refreshUserToken } from '../services/authService.js';
-import { parseCookies, setCookie } from '../utils/cookies.js';
+import { refreshUserToken } from '../_services/authService.js';
+import { parseCookies, setCookie } from '../_utils/../_utils/cookies.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

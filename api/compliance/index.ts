@@ -1,5 +1,5 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../middleware/authMiddleware.js';
+import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
 
 export default async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

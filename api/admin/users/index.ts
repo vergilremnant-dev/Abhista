@@ -1,7 +1,7 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../../middleware/authMiddleware.js';
-import { requirePermission } from '../../middleware/permissionMiddleware.js';
-import { db } from '../../utils/db.js';
+import { VercelRequestWithUser } from '../../_middleware/authMiddleware.js';
+import { requirePermission } from '../../_middleware/permissionMiddleware.js';
+import { db } from '../../_utils/db.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

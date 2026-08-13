@@ -1,7 +1,7 @@
 import { VercelResponse } from '@vercel/node';
 import { VercelRequestWithUser, withAuth } from './authMiddleware.js';
-import { Permission } from '../utils/rbacConfig.js';
-import { hasPermission } from '../utils/permissionResolver.js';
+import { Permission } from '../_utils/../_utils/rbacConfig.js';
+import { hasPermission } from '../_utils/../_utils/permissionResolver.js';
 
 export function requirePermission(
   permission: Permission,

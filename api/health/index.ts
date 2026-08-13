@@ -1,6 +1,6 @@
 import { VercelResponse, VercelRequest } from '@vercel/node';
-import { db } from '../utils/db.js';
-import { validateEnvironment } from '../utils/envValidator.js';
+import { db } from '../_utils/../_utils/db.js';
+import { validateEnvironment } from '../_utils/../_utils/envValidator.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

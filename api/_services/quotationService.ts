@@ -1,4 +1,4 @@
-import { db } from '../utils/db.js';
+import { db } from '../_utils/../_utils/db.js';
 import { QuotationStatus, PricingModel, RequirementStatus } from '@prisma/client';
 import { validateTransition } from './quotationWorkflow.js';
 import { calculateAndValidatePricing } from './pricingEngine.js';

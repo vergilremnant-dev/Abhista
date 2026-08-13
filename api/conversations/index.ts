@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../utils/auth.js';
-import { listConversations, createConversation } from '../services/chatService.js';
+import { verifyToken } from '../_utils/../_utils/auth.js';
+import { listConversations, createConversation } from '../_services/chatService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../utils/auth.js';
-import { getConsultationDetail } from '../../services/consultationService.js';
+import { verifyToken } from '../../_utils/auth.js';
+import { getConsultationDetail } from '../../_services/consultationService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = verifyToken(req);

@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../utils/auth.js';
-import { addRequirementNote } from '../../services/requirementService.js';
-import { db } from '../../utils/db.js';
+import { verifyToken } from '../../_utils/auth.js';
+import { addRequirementNote } from '../../_services/requirementService.js';
+import { db } from '../../_utils/db.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

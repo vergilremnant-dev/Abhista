@@ -1,4 +1,4 @@
-import { db } from '../utils/db.js';
+import { db } from '../_utils/../_utils/db.js';
 import { RequirementStatus } from '@prisma/client';
 import { validateTransition } from './workflowService.js';
 import { logRequirementHistory } from './auditService.js';

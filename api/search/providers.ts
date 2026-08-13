@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { searchProviders } from '../services/searchService.js';
-import { parseNaturalLanguageQuery } from '../utils/queryParser.js';
+import { searchProviders } from '../_services/searchService.js';
+import { parseNaturalLanguageQuery } from '../_utils/../_utils/queryParser.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

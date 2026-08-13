@@ -1,9 +1,9 @@
 import { VercelResponse } from '@vercel/node';
-import { db } from '../utils/db.js';
+import { db } from '../_utils/../_utils/db.js';
 import bcrypt from 'bcryptjs';
-import { validatePasswordStrength } from '../utils/validation.js';
-import { logSecurityEvent } from '../services/auditService.js';
-import { withAuth, VercelRequestWithUser } from '../middleware/authMiddleware.js';
+import { validatePasswordStrength } from '../_utils/../_utils/validation.js';
+import { logSecurityEvent } from '../_services/auditService.js';
+import { withAuth, VercelRequestWithUser } from '../_middleware/authMiddleware.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

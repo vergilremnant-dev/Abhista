@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../../utils/auth.js';
-import { getProjectById, transitionProjectStatus } from '../../services/projectService.js';
+import { verifyToken } from '../../_utils/auth.js';
+import { getProjectById, transitionProjectStatus } from '../../_services/projectService.js';
 import { ProjectStatus } from '@prisma/client';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

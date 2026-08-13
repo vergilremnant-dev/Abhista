@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { listProviders } from '../services/providerService.js';
+import { listProviders } from '../_services/providerService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const method = req.method;

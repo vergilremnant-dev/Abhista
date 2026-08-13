@@ -1,11 +1,11 @@
 import { VercelResponse } from '@vercel/node';
-import { db } from '../utils/db.js';
+import { db } from '../_utils/../_utils/db.js';
 import { Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { validatePasswordStrength } from '../utils/validation.js';
-import { logSecurityEvent } from '../services/auditService.js';
-import { VercelRequestWithUser } from '../middleware/authMiddleware.js';
+import { validatePasswordStrength } from '../_utils/../_utils/validation.js';
+import { logSecurityEvent } from '../_services/auditService.js';
+import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
 
 export default async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;

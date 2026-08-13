@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { trackArticleInteraction } from '../../services/articleService.js';
+import { trackArticleInteraction } from '../../_services/articleService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { slug } = req.query;

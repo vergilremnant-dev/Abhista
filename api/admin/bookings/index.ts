@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken, hasRole } from '../../utils/auth.js';
-import { adminGetBookings } from '../../services/bookingService.js';
+import { verifyToken, hasRole } from '../../_utils/auth.js';
+import { adminGetBookings } from '../../_services/bookingService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = verifyToken(req);

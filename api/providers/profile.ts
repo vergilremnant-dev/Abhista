@@ -1,10 +1,10 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyToken } from '../utils/auth.js';
+import { verifyToken } from '../_utils/../_utils/auth.js';
 import {
   getProviderByUserId,
   createProviderProfile,
   updateProviderProfile,
-} from '../services/providerService.js';
+} from '../_services/providerService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = verifyToken(req);

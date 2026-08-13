@@ -1,8 +1,8 @@
 import { VercelResponse } from '@vercel/node';
-import { VercelRequestWithUser } from '../middleware/authMiddleware.js';
-import { requirePermission } from '../middleware/permissionMiddleware.js';
-import { storage } from '../utils/storage.js';
-import { validateUploadedFile } from '../utils/validation.js';
+import { VercelRequestWithUser } from '../_middleware/authMiddleware.js';
+import { requirePermission } from '../_middleware/permissionMiddleware.js';
+import { storage } from '../_utils/../_utils/storage.js';
+import { validateUploadedFile } from '../_utils/../_utils/validation.js';
 
 async function handler(req: VercelRequestWithUser, res: VercelResponse) {
   const method = req.method;
