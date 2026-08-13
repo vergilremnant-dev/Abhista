@@ -18,6 +18,7 @@ const CUSTOMER_SIDEBAR_ITEMS: SidebarItem[] = [
   { name: 'Bookings', path: '/workspace/bookings', icon: '📅' },
   { name: 'Inbox', path: '/workspace/inbox', icon: '💬' },
   { name: 'Notifications', path: '/workspace/notifications', icon: '🔔' },
+  { name: 'Subscription', path: '/subscriptions', icon: '💎' },
   { name: 'Profile & Settings', path: '/workspace/settings', icon: '⚙️' },
   { name: 'About DBC', path: '/know-more', icon: 'ℹ️' },
 ];
@@ -29,6 +30,7 @@ const PROVIDER_SIDEBAR_ITEMS: SidebarItem[] = [
   { name: 'Bookings', path: '/workspace/bookings', icon: '📅' },
   { name: 'Inbox', path: '/workspace/inbox', icon: '💬' },
   { name: 'Notifications', path: '/workspace/notifications', icon: '🔔' },
+  { name: 'Subscription', path: '/subscriptions', icon: '💎' },
   { name: 'Profile & Settings', path: '/workspace/profile', icon: '⚙️' },
   { name: 'About DBC', path: '/know-more', icon: 'ℹ️' },
 ];

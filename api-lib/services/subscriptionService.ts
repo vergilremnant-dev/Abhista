@@ -84,9 +84,20 @@ export async function activateSubscription(userId: string, planId: number) {
   }
 
   // Enforce no duplicate active subscriptions
-  const hasActive = await verifyActiveSubscription(userId);
-  if (hasActive) {
-    throw new Error('Forbidden: You already have an active subscription');
+  const activeSubs = await db.userSubscription.findMany({
+    where: { userId, status: SubscriptionStatus.ACTIVE },
+  });
+  const alreadyOnSamePlan = activeSubs.some((sub) => sub.planId === plan.id);
+  if (alreadyOnSamePlan) {
+    throw new Error('Forbidden: You already have an active subscription to this plan');
+  }
+
+  // Expire previous active subscriptions
+  for (const sub of activeSubs) {
+    await db.userSubscription.update({
+      where: { id: sub.id },
+      data: { status: SubscriptionStatus.EXPIRED },
+    });
   }
 
   const startDate = new Date();
@@ -196,10 +207,12 @@ export async function createRazorpayOrder(userId: string, planId: number) {
     throw new Error('Selected plan is currently inactive');
   }
 
-  // Check if the user already has an active subscription
-  const hasActive = await verifyActiveSubscription(userId);
-  if (hasActive) {
-    throw new Error('You already have an active subscription');
+  // Check if the user already has an active subscription to the same plan
+  const activeSub = await db.userSubscription.findFirst({
+    where: { userId, status: SubscriptionStatus.ACTIVE },
+  });
+  if (activeSub && activeSub.planId === plan.id) {
+    throw new Error('You already have an active subscription to this plan');
   }
 
   const keyId = process.env.RAZORPAY_KEY_ID;
