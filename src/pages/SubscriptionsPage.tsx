@@ -4,13 +4,14 @@ import { subscriptionApi } from '../services/subscription/subscriptionService';
 import { useAuth } from '../hooks/auth/useAuth';
 import { AuthChallengeModal } from '../components/auth/AuthChallengeModal';
 import { BRAND } from '../config/branding';
-import type { SubscriptionPlan } from '../types/subscription/subscriptionTypes';
+import type { SubscriptionPlan, UserSubscription } from '../types/subscription/subscriptionTypes';
 
 export function SubscriptionsPage() {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+  const [activeSub, setActiveSub] = useState<UserSubscription | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -25,14 +26,20 @@ export function SubscriptionsPage() {
         setLoading(true);
         const list = await subscriptionApi.listPlans();
         setPlans(list);
-      } catch {
+
+        if (isAuthenticated) {
+          const currentSub = await subscriptionApi.getMySubscription();
+          setActiveSub(currentSub);
+        }
+      } catch (err) {
+        console.error('Failed to load subscription info:', err);
         setError('Failed to load subscription plans.');
       } finally {
         setLoading(false);
       }
     }
     loadPlans();
-  }, []);
+  }, [isAuthenticated]);
 
   interface RazorpaySuccessResponse {
     razorpay_payment_id: string;
@@ -193,10 +200,17 @@ export function SubscriptionsPage() {
       const isConsultant =
         p.name.toLowerCase().includes("consult");
 
+      const isActivePlan = activeSub !== null && activeSub.planId === p.id && activeSub.status === 'ACTIVE';
+      const hasAnyActiveSub = activeSub !== null && activeSub.status === 'ACTIVE';
+
       return (
         <div
           key={p.id}
-          className="rounded-2xl border border-emerald-500 ring-2 ring-emerald-500/10 bg-white p-6 sm:p-8 flex flex-col justify-between shadow-sm transition duration-300 hover:shadow-lg hover:-translate-y-1"
+          className={`rounded-2xl border bg-white p-6 sm:p-8 flex flex-col justify-between shadow-sm transition duration-300 hover:shadow-lg hover:-translate-y-1 ${
+            isActivePlan
+              ? "border-emerald-600 ring-4 ring-emerald-500/20"
+              : "border-stone-200"
+          }`}
         >
           <div className="space-y-5">
             <div className="flex justify-between items-start">
@@ -204,9 +218,15 @@ export function SubscriptionsPage() {
                 {p.name}
               </h3>
 
-              <span className="text-[9px] font-black uppercase tracking-widest text-emerald-800 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full">
-                Recommended
-              </span>
+              {isActivePlan ? (
+                <span className="text-[9px] font-black uppercase tracking-widest text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-full">
+                  Active / Subscribed
+                </span>
+              ) : (
+                <span className="text-[9px] font-black uppercase tracking-widest text-stone-500 bg-stone-50 border border-stone-200 px-2 py-1 rounded-full">
+                  Standard Plan
+                </span>
+              )}
             </div>
 
             {/* PRICE */}
@@ -302,11 +322,23 @@ export function SubscriptionsPage() {
 
             <button
               onClick={() => handlePurchase(p.id)}
-              disabled={loading}
-              className="w-full rounded-lg py-3 text-sm font-bold transition shadow-sm bg-emerald-700 hover:bg-emerald-800 text-white"
+              disabled={loading || hasAnyActiveSub}
+              className={`w-full rounded-lg py-3 text-sm font-bold transition shadow-sm ${
+                isActivePlan
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-not-allowed"
+                  : hasAnyActiveSub
+                  ? "bg-stone-100 text-stone-400 border border-stone-200 cursor-not-allowed"
+                  : "bg-emerald-700 hover:bg-emerald-800 text-white"
+              }`}
             >
-              Purchase Plan
+              {isActivePlan ? "Current Plan" : hasAnyActiveSub ? "Upgrade Unavailable" : "Purchase Plan"}
             </button>
+            {hasAnyActiveSub && !isActivePlan && (
+              <p className="text-[10px] text-red-600 mt-2 font-semibold text-center leading-relaxed">
+                Upgrades are not supported yet in Phase 1.<br/>
+                Please wait for your current plan to expire or contact support.
+              </p>
+            )}
 
           </div>
         </div>
