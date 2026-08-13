@@ -2,8 +2,8 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { getArticleBySlug } from '../services/articleService.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const { slug } = req.query;
-  const articleSlug = Array.isArray(slug) ? slug[0] : slug;
+  const { id } = req.query;
+  const articleSlug = Array.isArray(id) ? id[0] : id;
 
   if (!articleSlug) {
     return res.status(400).json({ success: false, message: 'Article slug is required' });
