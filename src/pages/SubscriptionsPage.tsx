@@ -294,9 +294,9 @@ export function SubscriptionsPage() {
                           <button
                             onClick={() => handlePurchase(up.id)}
                             disabled={loading}
-                            className="w-full rounded-lg py-2.5 px-4 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white transition shadow-sm"
+                            className="w-full rounded-lg py-2.5 px-4 text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white transition shadow-sm cursor-pointer"
                           >
-                            Upgrade Plan
+                            Upgrade to {up.name.replace(' Package', '')}
                           </button>
                         </div>
                       </div>
@@ -475,10 +475,10 @@ export function SubscriptionsPage() {
                   ? "bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-not-allowed"
                   : hasAnyActiveSub
                   ? "bg-stone-100 text-stone-400 border border-stone-200 cursor-not-allowed"
-                  : "bg-emerald-700 hover:bg-emerald-800 text-white"
+                  : "bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer"
               }`}
             >
-              {isActivePlan ? "Current Plan" : hasAnyActiveSub ? "Upgrade Unavailable" : "Purchase Plan"}
+              {isActivePlan ? "Current Plan" : hasAnyActiveSub ? "Upgrade Unavailable" : `Get ${p.name.replace(' Package', '')}`}
             </button>
             {hasAnyActiveSub && !isActivePlan && (
               <p className="text-[10px] text-red-600 mt-2 font-semibold text-center leading-relaxed">
