@@ -153,8 +153,6 @@ export function Navbar() {
         return [
           { label: 'Marketplace', to: '/' },
           { label: 'Dashboard', to: '/admin/dashboard' },
-          { label: 'Analytics', to: '/admin/analytics' },
-          { label: 'Bookings', to: '/workspace/bookings' },
           { label: 'Subscription', to: '/subscriptions' },
         ];
       }

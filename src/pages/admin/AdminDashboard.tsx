@@ -1505,6 +1505,7 @@ export function AdminDashboard() {
                 completedProjects={reportStats.completedProjects}
                 pendingVerifications={reportStats.pendingVerifications}
                 submittedQuotations={reportStats.submittedQuotations}
+                onTabSelect={setActiveTab}
               />
 
               {/* Filter Options */}
