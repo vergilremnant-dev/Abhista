@@ -61,11 +61,11 @@ export default function ConsultantDashboard() {
   }, []);
 
   const stats = [
-    { label: "Today's Consultations", value: '3', trend: '+1 new', trendUp: true, icon: '📅', color: 'text-emerald-700 bg-emerald-50' },
-    { label: 'Pending Requests', value: '5', trend: 'Needs review', trendUp: false, icon: '💡', color: 'text-amber-700 bg-amber-50' },
-    { label: 'Completed consultations', value: '38', trend: '+15% MoM', trendUp: true, icon: '✅', color: 'text-blue-700 bg-blue-50' },
-    { label: 'Active Customers', value: '12', trend: '+8% MoM', trendUp: true, icon: '👥', color: 'text-indigo-700 bg-indigo-50' },
-    { label: 'Monthly Earnings', value: '₹48,000', trend: 'Placeholder', trendUp: true, icon: '💳', color: 'text-stone-900 bg-stone-100' },
+    { label: "Today's Consultations", value: '3', trend: '+1 new', trendUp: true, icon: '📅', color: 'text-emerald-700 bg-emerald-50', path: '/workspace/bookings' },
+    { label: 'Pending Requests', value: '5', trend: 'Needs review', trendUp: false, icon: '💡', color: 'text-amber-700 bg-amber-50', path: '/workspace/leads' },
+    { label: 'Completed consultations', value: '38', trend: '+15% MoM', trendUp: true, icon: '✅', color: 'text-blue-700 bg-blue-50', path: '/workspace/bookings' },
+    { label: 'Active Customers', value: '12', trend: '+8% MoM', trendUp: true, icon: '👥', color: 'text-indigo-700 bg-indigo-50', path: '/workspace/crm' },
+    { label: 'Monthly Earnings', value: '₹48,000', trend: 'Info Only', trendUp: true, icon: '💳', color: 'text-stone-900 bg-stone-100' },
     { label: 'Average Rating', value: '4.95', trend: 'Excellent', trendUp: true, icon: '⭐', color: 'text-amber-500 bg-amber-50' },
   ];
 
@@ -158,20 +158,43 @@ export default function ConsultantDashboard() {
 
       {/* 2. Overview KPI Cards Grid */}
       <section className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-        {stats.map((stat, idx) => (
-          <div key={idx} className="bg-white border border-light-border p-4 rounded-2xl shadow-apple-xs hover:shadow-apple-sm transition-all duration-350 hover:-translate-y-0.5 flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <span className={`text-base p-2 rounded-xl ${stat.color}`}>{stat.icon}</span>
-              <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
-                stat.trendUp ? 'bg-emerald-50 text-emerald-800' : 'bg-stone-100 text-stone-500'
-              }`}>{stat.trend}</span>
+        {stats.map((stat, idx) => {
+          const content = (
+            <>
+              <div className="flex justify-between items-start">
+                <span className={`text-base p-2 rounded-xl ${stat.color}`}>{stat.icon}</span>
+                <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
+                  stat.trendUp ? 'bg-emerald-50 text-emerald-800' : 'bg-stone-100 text-stone-500'
+                }`}>{stat.trend}</span>
+              </div>
+              <div className="mt-4 space-y-1">
+                <span className="block text-2xl font-black text-stone-900">{stat.value}</span>
+                <span className="block text-[10px] font-bold text-stone-450 uppercase tracking-wider">{stat.label}</span>
+              </div>
+            </>
+          );
+
+          if (stat.path) {
+            return (
+              <button
+                key={idx}
+                onClick={() => navigate(stat.path!)}
+                className="bg-white border border-light-border p-4 rounded-2xl shadow-apple-xs hover:shadow-apple-sm hover:border-emerald-600/30 transition-all duration-350 hover:-translate-y-0.5 flex flex-col justify-between cursor-pointer text-left focus:outline-none"
+              >
+                {content}
+              </button>
+            );
+          }
+
+          return (
+            <div
+              key={idx}
+              className="bg-white border border-light-border p-4 rounded-2xl shadow-apple-xs flex flex-col justify-between"
+            >
+              {content}
             </div>
-            <div className="mt-4 space-y-1">
-              <span className="block text-2xl font-black text-stone-900">{stat.value}</span>
-              <span className="block text-[10px] font-bold text-stone-450 uppercase tracking-wider">{stat.label}</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
 
       {/* Main Content Layout Grid */}
@@ -191,7 +214,11 @@ export default function ConsultantDashboard() {
             </div>
 
             {schedule.length === 0 ? (
-              <EmptyState message="No scheduled consultations for today." />
+              <EmptyState
+                message="No scheduled consultations for today."
+                actionLabel="View Calendar"
+                onAction={() => navigate('/workspace/bookings')}
+              />
             ) : (
               <div className="space-y-4 relative before:absolute before:left-6 before:top-2 before:bottom-2 before:w-0.5 before:bg-light-border">
                 {schedule.map(item => (
@@ -247,7 +274,11 @@ export default function ConsultantDashboard() {
             </div>
 
             {requests.length === 0 ? (
-              <EmptyState message="No pending consultation requests." />
+              <EmptyState
+                message="No pending consultation requests."
+                actionLabel="Manage Availability"
+                onAction={() => navigate('/workspace/bookings')}
+              />
             ) : (
               <div className="space-y-4">
                 {requests.map(req => (
@@ -271,13 +302,13 @@ export default function ConsultantDashboard() {
                         onClick={() => handleAccept(req.id)}
                         className="px-3.5 py-2 bg-brand-emerald hover:bg-emerald-800 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition cursor-pointer"
                       >
-                        Accept
+                        Accept Request
                       </button>
                       <button
                         onClick={() => handleDecline(req.id)}
                         className="px-3.5 py-2 bg-stone-100 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-stone-700 border border-stone-300/40 rounded-lg text-[10px] font-bold uppercase tracking-wider transition cursor-pointer"
                       >
-                        Decline
+                        Decline Request
                       </button>
                     </div>
                   </div>
@@ -433,11 +464,19 @@ function SkeletonDashboard() {
 // ==========================================
 // Empty States Placeholder
 // ==========================================
-function EmptyState({ message }: { message: string }) {
+function EmptyState({ message, actionLabel, onAction }: { message: string; actionLabel?: string; onAction?: () => void }) {
   return (
-    <div className="p-8 text-center border border-dashed border-stone-250 rounded-2xl bg-stone-50/50 space-y-2 select-none">
+    <div className="p-8 text-center border border-dashed border-stone-200 rounded-2xl bg-stone-50/50 space-y-3 select-none">
       <span className="text-2xl block">📁</span>
-      <p className="text-xs text-stone-550 font-bold text-stone-500 uppercase tracking-widest">{message}</p>
+      <p className="text-xs font-bold text-stone-500 uppercase tracking-widest leading-normal">{message}</p>
+      {actionLabel && onAction && (
+        <button
+          onClick={onAction}
+          className="mt-1 px-3.5 py-1.5 bg-brand-emerald hover:bg-emerald-800 text-white rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer"
+        >
+          {actionLabel}
+        </button>
+      )}
     </div>
   );
 }
