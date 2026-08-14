@@ -181,42 +181,54 @@ export default function TradeProfessionalDashboard() {
                 <h3 className="text-xs font-black uppercase text-stone-900 font-serif">Active Projects</h3>
                 <p className="text-[10px] text-stone-400 font-medium">Construction tracking milestones</p>
               </div>
-              <button onClick={() => navigate('/workspace/projects')} className="text-[9.5px] font-black uppercase text-brand-emerald hover:underline">
+              <button onClick={() => navigate('/workspace/projects')} className="text-[9.5px] font-black uppercase text-brand-emerald hover:underline cursor-pointer">
                 View All Projects
               </button>
             </div>
 
             <div className="space-y-4">
-              {projects.map(proj => (
-                <div key={proj.id} className="p-4 bg-stone-50 border border-stone-200 rounded-2xl text-xs space-y-3">
-                  <div className="flex justify-between items-start flex-wrap gap-2">
-                    <div>
-                      <strong
-                        onClick={() => navigate(`/workspace/project/${proj.id}`)}
-                        className="text-stone-900 block text-xs hover:text-brand-emerald cursor-pointer transition"
-                      >
-                        {proj.name}
-                      </strong>
-                      <span className="text-[10px] text-stone-500 font-bold">Client: {proj.customerName} &bull; Stage: {proj.stage}</span>
-                    </div>
-                    <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border ${
-                      proj.status === 'Completed' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-blue-50 border-blue-200 text-blue-800'
-                    }`}>
-                      {proj.status}
-                    </span>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-[9px] font-bold text-stone-500">
-                      <span>Progress</span>
-                      <span>{proj.progress}%</span>
-                    </div>
-                    <div className="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-brand-emerald h-full" style={{ width: `${proj.progress}%` }}></div>
-                    </div>
-                  </div>
+              {projects.length === 0 ? (
+                <div className="p-6 text-center space-y-3 bg-stone-50 border border-stone-200 border-dashed rounded-2xl">
+                  <p className="text-xs text-stone-500 font-semibold">No active projects in progress yet.</p>
+                  <button
+                    onClick={() => navigate('/workspace/leads')}
+                    className="px-3.5 py-2 bg-brand-emerald hover:bg-emerald-800 text-white rounded-xl font-black text-[10px] uppercase tracking-wider transition cursor-pointer"
+                  >
+                    Explore Opportunities
+                  </button>
                 </div>
-              ))}
+              ) : (
+                projects.map(proj => (
+                  <div key={proj.id} className="p-4 bg-stone-50 border border-stone-200 rounded-2xl text-xs space-y-3">
+                    <div className="flex justify-between items-start flex-wrap gap-2">
+                      <div>
+                        <strong
+                          onClick={() => navigate(`/workspace/project/${proj.id}`)}
+                          className="text-stone-900 block text-xs hover:text-brand-emerald cursor-pointer transition"
+                        >
+                          {proj.name}
+                        </strong>
+                        <span className="text-[10px] text-stone-500 font-bold">Client: {proj.customerName} &bull; Stage: {proj.stage}</span>
+                      </div>
+                      <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                        proj.status === 'Completed' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-blue-50 border-blue-200 text-blue-800'
+                      }`}>
+                        {proj.status}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[9px] font-bold text-stone-500">
+                        <span>Progress</span>
+                        <span>{proj.progress}%</span>
+                      </div>
+                      <div className="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-brand-emerald h-full" style={{ width: `${proj.progress}%` }}></div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </section>
 
@@ -227,28 +239,34 @@ export default function TradeProfessionalDashboard() {
                 <h3 className="text-xs font-black uppercase text-stone-900 font-serif">Available Leads Match</h3>
                 <p className="text-[10px] text-stone-400">Requirements matching electrical, masonry, civil scopes</p>
               </div>
-              <button onClick={() => navigate('/workspace/leads')} className="text-[9.5px] font-black uppercase text-brand-emerald hover:underline">
+              <button onClick={() => navigate('/workspace/leads')} className="text-[9.5px] font-black uppercase text-brand-emerald hover:underline cursor-pointer">
                 View All Leads
               </button>
             </div>
 
             <div className="space-y-3">
-              {requirements.map(req => (
-                <div key={req.id} className="p-4 bg-stone-50 border border-stone-200 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 text-xs">
-                  <div>
-                    <strong className="text-stone-900 block">{req.title}</strong>
-                    <span className="block text-[10px] text-stone-500 font-bold mt-0.5">Budget: {req.budget} &bull; Location: {req.location} &bull; {req.postedDate}</span>
-                  </div>
-                  <div className="flex gap-2 text-[9px] font-black uppercase tracking-wider shrink-0">
-                    <button onClick={() => handleSaveReq(req.id)} className="px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-stone-750 cursor-pointer">
-                      Save
-                    </button>
-                    <button onClick={() => handleExpressInterest(req.id)} className="px-3 py-1.5 bg-brand-emerald text-white rounded-lg cursor-pointer">
-                      Bid Quote
-                    </button>
-                  </div>
+              {requirements.length === 0 ? (
+                <div className="p-6 text-center bg-stone-50 border border-stone-200 border-dashed rounded-2xl">
+                  <p className="text-xs text-stone-500 font-semibold">No matching leads available at the moment.</p>
                 </div>
-              ))}
+              ) : (
+                requirements.map(req => (
+                  <div key={req.id} className="p-4 bg-stone-50 border border-stone-200 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 text-xs">
+                    <div>
+                      <strong className="text-stone-900 block">{req.title}</strong>
+                      <span className="block text-[10px] text-stone-500 font-bold mt-0.5">Budget: {req.budget} &bull; Location: {req.location} &bull; {req.postedDate}</span>
+                    </div>
+                    <div className="flex gap-2 text-[9px] font-black uppercase tracking-wider shrink-0">
+                      <button onClick={() => handleSaveReq(req.id)} className="px-3 py-1.5 bg-white border border-stone-200 rounded-lg text-stone-750 cursor-pointer">
+                        Save Lead
+                      </button>
+                      <button onClick={() => handleExpressInterest(req.id)} className="px-3 py-1.5 bg-brand-emerald text-white rounded-lg cursor-pointer">
+                        Submit Quote
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </section>
 
