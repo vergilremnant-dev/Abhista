@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { RequirementStatusBadge } from './RequirementStatusBadge';
 
 interface Requirement {
@@ -31,6 +32,7 @@ export function RequirementDetail({
   onDuplicate,
   onDelete,
 }: RequirementDetailProps) {
+  const navigate = useNavigate();
   const isDraft = requirement.status.trim().toLowerCase() === 'draft';
   const isOpen = requirement.status.trim().toLowerCase() === 'open';
 
@@ -149,48 +151,64 @@ export function RequirementDetail({
       </div>
 
       {/* Action Buttons */}
-      <div className="border-t border-stone-100 pt-4 flex items-center justify-between gap-3">
+      <div className="border-t border-stone-100 pt-4 flex flex-col gap-2 w-full">
         {isDraft && (
           <div className="flex gap-2 w-full">
             <button
               onClick={onEdit}
-              className="flex-1 bg-stone-900 hover:bg-stone-850 text-white font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center"
+              className="flex-1 bg-stone-900 hover:bg-stone-850 text-white font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center cursor-pointer"
             >
-              Resume / Edit Draft
+              Continue Editing Draft
             </button>
             <button
               onClick={onDelete}
-              className="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center border border-rose-100"
+              className="bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center border border-rose-100 cursor-pointer"
             >
-              Delete
+              Delete Draft
             </button>
           </div>
         )}
 
         {isOpen && (
-          <div className="flex gap-2 w-full">
+          <div className="flex flex-col gap-2 w-full">
             <button
-              onClick={onCancel}
-              className="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center border border-rose-100"
+              onClick={() => navigate(`/search?q=${encodeURIComponent(requirement.category)}`)}
+              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center cursor-pointer"
             >
-              Cancel Requirement
+              Explore Matching Partners
             </button>
-            <button
-              onClick={onDuplicate}
-              className="flex-1 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center"
-            >
-              Duplicate
-            </button>
+            <div className="flex gap-2 w-full">
+              <button
+                onClick={onCancel}
+                className="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center border border-rose-100 cursor-pointer"
+              >
+                Cancel Requirement
+              </button>
+              <button
+                onClick={onDuplicate}
+                className="flex-1 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center cursor-pointer"
+              >
+                Duplicate
+              </button>
+            </div>
           </div>
         )}
 
         {!isDraft && !isOpen && (
-          <button
-            onClick={onDuplicate}
-            className="w-full bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center"
-          >
-            Duplicate / Reuse Specifications
-          </button>
+          <div className="flex flex-col gap-2 w-full">
+            <button
+              onClick={onDuplicate}
+              className="w-full bg-stone-900 hover:bg-stone-850 text-white font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center cursor-pointer"
+            >
+              Reopen / Duplicate Specifications
+            </button>
+            <button
+              onClick={() => navigate('/')}
+              className="w-full bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center cursor-pointer"
+            >
+              Explore Professionals
+            </button>
+          </div>
         )}
       </div>
 

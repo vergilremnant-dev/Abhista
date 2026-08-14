@@ -146,14 +146,14 @@ export default function WorkspaceRequirements() {
         }
       }
 
+      const updatedItem = { ...editingRequirement, ...formData, status, createdAt: new Date().toISOString() };
       setRequirements((prev) =>
         prev.map((req) =>
-          req.id === editingRequirement.id
-            ? { ...req, ...formData, status, createdAt: new Date().toISOString() }
-            : req
+          req.id === editingRequirement.id ? updatedItem : req
         )
       );
       setEditingRequirement(null);
+      setSelectedRequirement(updatedItem);
     } else {
       // Create new item
       let createdId = `req-${Date.now()}`;
@@ -181,9 +181,9 @@ export default function WorkspaceRequirements() {
         prosInterestedCount: 0,
       };
       setRequirements((prev) => [newItem, ...prev]);
+      setSelectedRequirement(newItem);
     }
     setIsFormOpen(false);
-    setSelectedRequirement(null);
   };
 
   const handleCancelRequirement = async (id: string) => {
@@ -270,9 +270,9 @@ export default function WorkspaceRequirements() {
               setEditingRequirement(null);
               setIsFormOpen(true);
             }}
-            className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
           >
-            + Post Requirement
+            + Create Requirement
           </button>
         )}
       </div>
