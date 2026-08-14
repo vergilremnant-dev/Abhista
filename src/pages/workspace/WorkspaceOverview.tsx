@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/auth/useAuth';
 import { WelcomeCard } from '../../components/workspace/WelcomeCard';
@@ -6,6 +6,9 @@ import { QuickActionCard } from '../../components/workspace/QuickActionCard';
 import { StatCard } from '../../components/workspace/StatCard';
 import { ActivityTimeline } from '../../components/workspace/ActivityTimeline';
 import { SectionHeader } from '../../components/workspace/SectionHeader';
+import { bookingApi } from '../../services/booking/bookingService';
+import { subscriptionApi } from '../../services/subscription/subscriptionService';
+import type { UserSubscription } from '../../types/subscription/subscriptionTypes';
 
 // Custom tab type for Customer Dashboard subsections
 type DashboardTab = 'dashboard' | 'projects' | 'documents' | 'payments' | 'activity';
@@ -41,16 +44,7 @@ const MOCK_ACTIVITIES = [
   },
 ];
 
-const MOCK_REQUIREMENTS = [
-  {
-    id: 'req-1',
-    title: 'Modern Villa Blueprint Layout',
-    description: 'Looking for a certified architect to draft structural and landscape plans for a 3000 sq.ft. villa.',
-    status: 'Bidding Active',
-    category: 'Architect',
-    budget: '₹50,000 - ₹80,000',
-  },
-];
+
 
 const MOCK_PROJECTS = [
   {
@@ -83,9 +77,46 @@ export default function WorkspaceOverview() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<DashboardTab>('dashboard');
-
-  // Document filter
   const [selectedDocCategory, setSelectedDocCategory] = useState('ALL');
+
+  const [requirements, setRequirements] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [activeSub, setActiveSub] = useState<UserSubscription | null>(null);
+
+  useEffect(() => {
+    // 1. Load Requirements
+    const rawReq = localStorage.getItem('dbc_customer_requirements');
+    if (rawReq) {
+      try {
+        setRequirements(JSON.parse(rawReq));
+      } catch {
+        setRequirements([]);
+      }
+    }
+
+    // 2. Load Bookings
+    async function loadBookings() {
+      try {
+        const list = await bookingApi.getMyBookings();
+        setBookings(list || []);
+      } catch (err) {
+        console.error('Failed to load dashboard bookings:', err);
+      }
+    }
+
+    // 3. Load Subscription
+    async function loadSubscription() {
+      try {
+        const sub = await subscriptionApi.getMySubscription();
+        setActiveSub(sub);
+      } catch (err) {
+        console.error('Failed to load dashboard subscription:', err);
+      }
+    }
+
+    loadBookings();
+    loadSubscription();
+  }, []);
 
   const handleAction = (route: string) => {
     navigate(`/workspace/${route}`);
@@ -139,38 +170,124 @@ export default function WorkspaceOverview() {
             onCompleteProfile={() => handleAction('settings')}
           />
 
+          {/* DYNAMIC NEXT ACTION BANNER (Urban Company Inspiration) */}
+          <div className="bg-gradient-to-r from-emerald-50 to-white border border-emerald-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 text-left">
+            <div className="space-y-1.5 flex-1">
+              <span className="text-[8px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
+                Next Suggested Step
+              </span>
+              {bookings.length > 0 ? (
+                <>
+                  <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
+                    Active Service Bookings
+                  </h3>
+                  <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
+                    Track the progress of your active bookings or message your assigned specialists for site coordination.
+                  </p>
+                </>
+              ) : requirements.length > 0 ? (
+                <>
+                  <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
+                    Manage Requirements & Offers
+                  </h3>
+                  <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
+                    You have active project requirements. Check quotes and proposals submitted by local specialists.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
+                    Get Started with DBC
+                  </h3>
+                  <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
+                    Publish your project specifications to receive free bids from local contractors, or explore vetted partner profiles.
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3.5 flex-shrink-0">
+              {bookings.length > 0 ? (
+                <>
+                  <button
+                    onClick={() => navigate('/workspace/bookings')}
+                    className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
+                  >
+                    View Bookings
+                  </button>
+                  <button
+                    onClick={() => navigate('/chat')}
+                    className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
+                  >
+                    Message Professional
+                  </button>
+                </>
+              ) : requirements.length > 0 ? (
+                <>
+                  <button
+                    onClick={() => navigate('/workspace/requirements')}
+                    className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
+                  >
+                    Manage Requirements
+                  </button>
+                  <button
+                    onClick={() => navigate('/')}
+                    className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
+                  >
+                    Explore Professionals
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate('/workspace/requirements')}
+                    className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
+                  >
+                    Create Requirement
+                  </button>
+                  <button
+                    onClick={() => navigate('/')}
+                    className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
+                  >
+                    Explore Professionals
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
           {/* Quick Actions Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <QuickActionCard
-              title="Post Requirement"
-              description="Create project specifications"
+              title="Create Requirement"
+              description="Post your project scope"
               icon="➕"
               onClick={() => handleAction('requirements')}
             />
             <QuickActionCard
-              title="My Bookings"
-              description="View active appointments"
+              title="View Bookings"
+              description="Verify scheduled sessions"
               icon="📅"
               onClick={() => handleAction('bookings')}
             />
             <QuickActionCard
-              title="Inbox Messages"
-              description="Consult with professionals"
+              title="Message Professional"
+              description="Coordinate via active chats"
               icon="💬"
-              onClick={() => handleAction('inbox')}
+              onClick={() => navigate('/chat')}
             />
             <QuickActionCard
-              title="Project Payments"
-              description="View invoice statements"
-              icon="💳"
-              onClick={() => setActiveTab('payments')}
+              title={activeSub && activeSub.status === 'ACTIVE' ? "Premium Active" : "View Subscription"}
+              description={activeSub && activeSub.status === 'ACTIVE' ? "Manage Active Benefits" : "Explore Premium Pass"}
+              icon="💎"
+              onClick={() => navigate('/subscriptions')}
             />
           </div>
 
           {/* Stats Metrics Row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard title="Active Projects" value={MOCK_PROJECTS.length} icon="🏗️" label="In progress" />
-            <StatCard title="Open Bids" value={MOCK_REQUIREMENTS.length} icon="📋" label="Bidding active" />
+            <StatCard title="Open Bids" value={requirements.length} icon="📋" label="Bidding active" />
             <StatCard title="Pending Payments" value={MOCK_PAYMENTS.filter(p => p.status === 'Pending').length} icon="💳" label="Action required" />
             <StatCard title="Blueprints File" value={MOCK_DOCUMENTS.length} icon="📁" label="Uploaded docs" />
           </div>
@@ -184,28 +301,44 @@ export default function WorkspaceOverview() {
                 <SectionHeader
                   title="Open Requirements"
                   subtitle="Custom project bids and contractor proposals"
-                  actionLabel="Manage requirements"
+                  actionLabel="Manage Requirements"
                   onAction={() => handleAction('requirements')}
                 />
                 
-                {MOCK_REQUIREMENTS.map((req) => (
-                  <div key={req.id} className="dbc-card text-left space-y-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="text-xs font-black text-stone-black">{req.title}</h4>
-                        <span className="inline-block text-[8px] font-black uppercase bg-light-stone text-stone-gray px-2 py-0.5 rounded border border-light-border mt-1">
-                          {req.category}
-                        </span>
-                      </div>
-                      <span className="dbc-badge dbc-badge-progress">{req.status}</span>
-                    </div>
-                    <p className="text-[10px] text-stone-gray leading-relaxed font-semibold">{req.description}</p>
-                    <div className="border-t border-light-border/40 pt-2 flex justify-between items-center text-[9px] font-bold text-stone-gray uppercase">
-                      <span>Target Budget: {req.budget}</span>
-                      <button onClick={() => handleAction('requirements')} className="text-brand-emerald font-black">Manage Offers →</button>
-                    </div>
+                {requirements.length === 0 ? (
+                  <div className="dbc-card text-center p-8 space-y-4 border border-dashed border-stone-300">
+                    <span className="text-3xl block">📋</span>
+                    <h4 className="text-xs font-black text-stone-900 uppercase tracking-wider">No Requirements Found</h4>
+                    <p className="text-[10px] text-stone-500 font-semibold max-w-sm mx-auto leading-relaxed">
+                      Post your project specifications to receive bids from verified architects, vastu consultants, and contractors.
+                    </p>
+                    <button
+                      onClick={() => navigate('/workspace/requirements')}
+                      className="dbc-btn dbc-btn-primary py-2 px-4 text-[10px] font-black uppercase tracking-wider cursor-pointer"
+                    >
+                      Create Requirement
+                    </button>
                   </div>
-                ))}
+                ) : (
+                  requirements.map((req) => (
+                    <div key={req.id} className="dbc-card text-left space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="text-xs font-black text-stone-black">{req.title}</h4>
+                          <span className="inline-block text-[8px] font-black uppercase bg-light-stone text-stone-gray px-2 py-0.5 rounded border border-light-border mt-1">
+                            {req.category}
+                          </span>
+                        </div>
+                        <span className="dbc-badge dbc-badge-progress">{req.status}</span>
+                      </div>
+                      <p className="text-[10px] text-stone-gray leading-relaxed font-semibold">{req.description}</p>
+                      <div className="border-t border-light-border/40 pt-2 flex justify-between items-center text-[9px] font-bold text-stone-gray uppercase">
+                        <span>Target Budget: ₹{(req.budgetMin || 0).toLocaleString()} - ₹{(req.budgetMax || 0).toLocaleString()}</span>
+                        <button onClick={() => handleAction('requirements')} className="text-brand-emerald font-black hover:underline cursor-pointer focus:outline-none">Manage Proposals →</button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
             </div>
