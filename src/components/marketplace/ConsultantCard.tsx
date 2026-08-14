@@ -122,13 +122,13 @@ export function ConsultantCard({ consultant, onBook, onViewProfile }: Consultant
             onClick={() => onViewProfile(consultant.id)}
             className="h-8.5 px-2 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-800 text-[11px] font-bold uppercase tracking-wider transition cursor-pointer flex items-center justify-center"
           >
-            Details
+            View Profile
           </button>
           <button
             onClick={() => onBook(consultant)}
             className="h-8.5 px-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-[11px] font-bold uppercase tracking-wider transition shadow-2xs cursor-pointer flex items-center justify-center gap-1"
           >
-            <span>Book</span>
+            <span>Book Consultation</span>
             <span>→</span>
           </button>
         </div>
