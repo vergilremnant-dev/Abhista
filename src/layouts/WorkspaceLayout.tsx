@@ -16,7 +16,7 @@ const CUSTOMER_SIDEBAR_ITEMS: SidebarItem[] = [
   { name: 'Overview', path: '/workspace/overview', icon: '📊' },
   { name: 'My Requirements', path: '/workspace/requirements', icon: '📋' },
   { name: 'Bookings', path: '/workspace/bookings', icon: '📅' },
-  { name: 'Inbox', path: '/workspace/inbox', icon: '💬' },
+  { name: 'Inbox', path: '/chat', icon: '💬' },
   { name: 'Notifications', path: '/workspace/notifications', icon: '🔔' },
   { name: 'Subscription', path: '/subscriptions', icon: '💎' },
   { name: 'Profile & Settings', path: '/workspace/settings', icon: '⚙️' },

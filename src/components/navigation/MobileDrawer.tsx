@@ -138,24 +138,38 @@ export function MobileDrawer({
 
             {user && (
               <div className="grid grid-cols-2 gap-2 text-center">
-                <button
-                  onClick={() => {
-                    onNavigateWorkspace(null);
-                    onClose();
-                  }}
-                  className="py-2 px-3 border border-stone-200 rounded-xl text-[10px] font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer"
-                >
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => {
-                    onNavigateWorkspace('settings');
-                    onClose();
-                  }}
-                  className="py-2 px-3 border border-stone-200 rounded-xl text-[10px] font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer"
-                >
-                  Settings
-                </button>
+                {user.role !== 'ROLE_CUSTOMER' ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        onNavigateWorkspace(null);
+                        onClose();
+                      }}
+                      className="py-2 px-3 border border-stone-200 rounded-xl text-[10px] font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer"
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => {
+                        onNavigateWorkspace('settings');
+                        onClose();
+                      }}
+                      className="py-2 px-3 border border-stone-200 rounded-xl text-[10px] font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer"
+                    >
+                      Settings
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      onNavigateWorkspace('settings');
+                      onClose();
+                    }}
+                    className="col-span-2 py-2 px-3 border border-stone-200 rounded-xl text-[10px] font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer"
+                  >
+                    Settings
+                  </button>
+                )}
               </div>
             )}
 

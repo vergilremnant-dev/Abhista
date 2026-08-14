@@ -165,8 +165,6 @@ export function Navbar() {
       return [
         { label: 'Marketplace', to: '/' },
         { label: 'Dashboard', to: '/workspace/overview' },
-        { label: 'Requirements', to: '/workspace/requirements' },
-        { label: 'Bookings', to: '/workspace/bookings' },
         { label: 'Subscription', to: '/subscriptions' },
       ];
     }
