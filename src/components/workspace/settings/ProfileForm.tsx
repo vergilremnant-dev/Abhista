@@ -12,10 +12,11 @@ export interface PersonalInfoData {
 interface ProfileFormProps {
   initialValues: PersonalInfoData;
   onSubmit: (values: PersonalInfoData) => void;
+  onCancel?: () => void;
   saving?: boolean;
 }
 
-export function ProfileForm({ initialValues, onSubmit, saving = false }: ProfileFormProps) {
+export function ProfileForm({ initialValues, onSubmit, onCancel, saving = false }: ProfileFormProps) {
   const [values, setValues] = useState<PersonalInfoData>(initialValues);
   const [error, setError] = useState('');
 
@@ -132,13 +133,24 @@ export function ProfileForm({ initialValues, onSubmit, saving = false }: Profile
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={saving}
-        className="rounded-xl bg-stone-900 hover:bg-stone-850 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 transition duration-200 cursor-pointer shadow-sm disabled:opacity-50"
-      >
-        {saving ? 'Saving Updates...' : 'Save Personal Details'}
-      </button>
+      <div className="flex gap-2.5 pt-2">
+        <button
+          type="submit"
+          disabled={saving}
+          className="rounded-xl bg-stone-900 hover:bg-stone-850 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 transition duration-200 cursor-pointer shadow-sm disabled:opacity-50"
+        >
+          {saving ? 'Saving Changes...' : 'Save Changes'}
+        </button>
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-700 font-bold text-xs uppercase tracking-wider px-6 py-3 transition duration-200 cursor-pointer"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }

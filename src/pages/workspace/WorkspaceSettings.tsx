@@ -1,5 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/auth/useAuth';
+import { useAuthDispatch } from '../../hooks/auth/useAuthStore';
+import { logoutThunk } from '../../store/auth/authSlice';
 import { BRAND } from '../../config/branding';
 import { ProfileHeader } from '../../components/workspace/settings/ProfileHeader';
 import { ProfileCompletionCard } from '../../components/workspace/settings/ProfileCompletionCard';
@@ -51,6 +54,15 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 
 export default function WorkspaceSettings() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useAuthDispatch();
+
+  const handleLogoutClick = () => {
+    if (window.confirm('Are you sure you want to sign out?')) {
+      void dispatch(logoutThunk());
+      navigate('/');
+    }
+  };
 
   // Active sub tab
   const [activeTab, setActiveTab] = useState<'PROFILE' | 'ADDRESSES' | 'PREFERENCES' | 'SECURITY' | 'SYSTEM'>('PROFILE');
@@ -363,6 +375,7 @@ export default function WorkspaceSettings() {
                     initialValues={personalInfo}
                     saving={savingProfile}
                     onSubmit={handleProfileSubmit}
+                    onCancel={() => setIsEditingProfile(false)}
                   />
                 ) : (
                   <div className="space-y-4">
@@ -439,14 +452,24 @@ export default function WorkspaceSettings() {
 
         {/* TABS 5: Technical System info */}
         {activeTab === 'SYSTEM' && (
-          <AccountInfoCard
-            accountType="Customer Account (SaaS Client)"
-            role="ROLE_CUSTOMER"
-            memberSince="05-Jun-2026 14:10"
-            lastLogin={new Date().toLocaleString()}
-            status="ACTIVE"
-            appVersion="v2.2.0-Production-Beta"
-          />
+          <div className="space-y-4">
+            <AccountInfoCard
+              accountType="Customer Account (SaaS Client)"
+              role="ROLE_CUSTOMER"
+              memberSince="05-Jun-2026 14:10"
+              lastLogin={new Date().toLocaleString()}
+              status="ACTIVE"
+              appVersion="v2.2.0-Production-Beta"
+            />
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={handleLogoutClick}
+                className="rounded-xl border border-stone-200 hover:border-red-200 bg-white hover:bg-red-50 text-stone-700 hover:text-red-700 font-bold text-xs uppercase tracking-wider px-5 py-2.5 transition duration-200 cursor-pointer shadow-sm"
+              >
+                Log Out Account
+              </button>
+            </div>
+          </div>
         )}
 
       </div>
