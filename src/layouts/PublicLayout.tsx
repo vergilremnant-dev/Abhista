@@ -1,17 +1,19 @@
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/navigation/Navbar';
+import { MobileBottomNav } from '../components/navigation/MobileBottomNav';
 
 import { BRAND } from '../config/branding';
 
 export function PublicLayout() {
   return (
-    <div className="min-h-screen bg-warm-cream flex flex-col justify-between">
+    <div className="min-h-screen bg-warm-cream flex flex-col justify-between pb-16 lg:pb-0">
       <div className="flex-1 flex flex-col">
         <Navbar />
         <main className="flex-1">
           <Outlet />
         </main>
       </div>
+      <MobileBottomNav />
 
       {/* Shared Persistent Footer */}
       <footer className="border-t border-light-border bg-white py-12 text-center text-stone-500 text-xs">

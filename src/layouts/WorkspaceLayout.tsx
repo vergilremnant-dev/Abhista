@@ -5,6 +5,7 @@ import { BRAND } from '../config/branding';
 import { useAuthDispatch } from '../hooks/auth/useAuthStore';
 import { logoutThunk } from '../store/auth/authSlice';
 import { BrandLogo } from '../components/common/BrandLogo';
+import { MobileBottomNav } from '../components/navigation/MobileBottomNav';
 
 interface SidebarItem {
   name: string;
@@ -186,7 +187,7 @@ export default function WorkspaceLayout() {
         </aside>
 
         {/* MAIN VIEWPORT */}
-        <main className="flex-1 bg-warm-cream p-4 sm:p-6 lg:p-8 overflow-y-auto h-[calc(100vh-4rem)] flex flex-col justify-between">
+        <main className="flex-1 bg-warm-cream p-4 sm:p-6 lg:p-8 pb-16 lg:pb-8 overflow-y-auto h-[calc(100vh-4rem)] flex flex-col justify-between">
           <div className="flex-1">
             <Outlet />
           </div>
@@ -202,6 +203,7 @@ export default function WorkspaceLayout() {
         </main>
 
       </div>
+      <MobileBottomNav />
     </div>
   );
 }
