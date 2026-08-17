@@ -1,5 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom';
 
 const WorkspaceLayout = lazy(() => import('./layouts/WorkspaceLayout'));
 const WorkspaceOverview = lazy(() => import('./pages/workspace/WorkspaceOverview'));
@@ -172,21 +172,37 @@ function App() {
         <Route index element={<WorkspaceIndexRedirect />} />
         
         {/* Customer subroutes */}
-        <Route path="overview" element={<WorkspaceOverview />} />
-        <Route path="requirements" element={<WorkspaceRequirements />} />
-        <Route path="settings" element={<WorkspaceSettings />} />
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_CUSTOMER']}>
+              <Outlet />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="overview" element={<WorkspaceOverview />} />
+          <Route path="requirements" element={<WorkspaceRequirements />} />
+          <Route path="settings" element={<WorkspaceSettings />} />
+        </Route>
 
         {/* Professional subroutes */}
-        <Route path="dashboard" element={<ProfessionalDashboard />} />
-        <Route path="leads" element={<ProfessionalLeads />} />
-        <Route path="projects" element={<ProfessionalProjects />} />
-        <Route path="profile" element={<ProfessionalProfile />} />
-        <Route path="consultation/:id" element={<ConsultationWorkspace />} />
-        <Route path="report/:id" element={<ConsultationReportPage />} />
-        <Route path="crm" element={<ConsultantCrmPage />} />
-        <Route path="requirement/:id" element={<RequirementWorkspacePage />} />
-        <Route path="quotations" element={<QuotationManagementPage />} />
-        <Route path="project/:id" element={<ProfessionalProjectWorkspace />} />
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['ROLE_PROVIDER']}>
+              <Outlet />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<ProfessionalDashboard />} />
+          <Route path="leads" element={<ProfessionalLeads />} />
+          <Route path="projects" element={<ProfessionalProjects />} />
+          <Route path="profile" element={<ProfessionalProfile />} />
+          <Route path="consultation/:id" element={<ConsultationWorkspace />} />
+          <Route path="report/:id" element={<ConsultationReportPage />} />
+          <Route path="crm" element={<ConsultantCrmPage />} />
+          <Route path="requirement/:id" element={<RequirementWorkspacePage />} />
+          <Route path="quotations" element={<QuotationManagementPage />} />
+          <Route path="project/:id" element={<ProfessionalProjectWorkspace />} />
+        </Route>
 
         {/* Shared subroutes (dynamic rendering inside components) */}
         <Route path="bookings" element={<WorkspaceBookings />} />
