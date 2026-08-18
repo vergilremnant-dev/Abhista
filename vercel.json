@@ -27,7 +27,7 @@
       "destination": "/api/index"
     },
     {
-      "source": "/:path*",
+      "source": "/((?!api|assets|favicon.ico|manifest.json|sw.js).*)",
       "destination": "/index.html"
     }
   ]
