@@ -29,6 +29,8 @@ target/
 # Compiled API gateway javascript outputs
 api/**/*.js
 api/**/*.js.map
+api-lib/**/*.js
+api-lib/**/*.js.map
 
 # Logs
 logs/
