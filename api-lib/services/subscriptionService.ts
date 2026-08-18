@@ -309,75 +309,73 @@ export async function verifyRazorpayPayment(
     throw new Error('Payment signature verification failed');
   }
 
-  // 2. Fetch corresponding payment record
-  const payment = await db.payment.findFirst({
-    where: { OR: [{ txRef: razorpayOrderId }, { razorpayOrderId }] },
-    include: { plan: true },
-  });
-
-  if (!payment) {
-    throw new Error('Payment record not found for this order');
-  }
-
-  if (payment.userId !== userId) {
-    throw new Error('Payment does not belong to this user');
-  }
-
-  // Idempotency: If payment is already successful, do not activate again
-  if (payment.status === PaymentStatus.SUCCESS) {
-    const existingSub = await db.userSubscription.findFirst({
-      where: { userId, transactionReference: razorpayPaymentId },
+  // 2. Fetch corresponding payment record and update atomically within a transaction
+  return await db.$transaction(async (tx) => {
+    const payment = await tx.payment.findFirst({
+      where: { OR: [{ txRef: razorpayOrderId }, { razorpayOrderId }] },
+      include: { plan: true },
     });
-    if (existingSub) {
-      return existingSub;
+
+    if (!payment) {
+      throw new Error('Payment record not found for this order');
     }
-  }
 
-  const plan = payment.plan;
-  if (!plan) {
-    throw new Error('Plan not associated with this payment');
-  }
+    if (payment.userId !== userId) {
+      throw new Error('Payment does not belong to this user');
+    }
 
-  // Enforce no duplicate active subscriptions. Check and expire.
-  const activeSubs = await db.userSubscription.findMany({
-    where: { userId, status: SubscriptionStatus.ACTIVE },
-  });
-  for (const sub of activeSubs) {
-    await db.userSubscription.update({
-      where: { id: sub.id },
+    // Idempotency: If payment is already successful, do not activate again
+    if (payment.status === PaymentStatus.SUCCESS) {
+      const existingSub = await tx.userSubscription.findFirst({
+        where: { userId, transactionReference: razorpayPaymentId },
+        include: { plan: true },
+      });
+      if (existingSub) {
+        return existingSub;
+      }
+    }
+
+    const plan = payment.plan;
+    if (!plan) {
+      throw new Error('Plan not associated with this payment');
+    }
+
+    // Enforce no duplicate active subscriptions. Check and expire.
+    await tx.userSubscription.updateMany({
+      where: { userId, status: SubscriptionStatus.ACTIVE },
       data: { status: SubscriptionStatus.EXPIRED },
     });
-  }
 
-  // Create User Subscription
-  const startDate = new Date();
-  const endDate = new Date();
-  endDate.setDate(startDate.getDate() + plan.durationDays);
+    // Create User Subscription
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + plan.durationDays);
 
-  const subscription = await db.userSubscription.create({
-    data: {
-      userId,
-      planId: plan.id,
-      status: SubscriptionStatus.ACTIVE,
-      startDate,
-      endDate,
-      transactionReference: razorpayPaymentId,
-    },
-    include: {
-      plan: true,
-    },
+    const subscription = await tx.userSubscription.create({
+      data: {
+        userId,
+        planId: plan.id,
+        status: SubscriptionStatus.ACTIVE,
+        startDate,
+        endDate,
+        transactionReference: razorpayPaymentId,
+      },
+      include: {
+        plan: true,
+      },
+    });
+
+    // Update payment status to SUCCESS and store payment details
+    await tx.payment.update({
+      where: { id: payment.id },
+      data: {
+        status: PaymentStatus.SUCCESS,
+        razorpayPaymentId,
+        razorpaySignature,
+      },
+    });
+
+    return subscription;
   });
-
-  // Update payment status to SUCCESS and store payment details
-  await db.payment.update({
-    where: { id: payment.id },
-    data: {
-      status: PaymentStatus.SUCCESS,
-      razorpayPaymentId,
-      razorpaySignature,
-    },
-  });
-
-  return subscription;
 }
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
-import { db } from '../../api/utils/db.js';
+import { db } from '../../api-lib/utils/db.js';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       workforceType: {

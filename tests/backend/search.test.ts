@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { searchProviders } from '../../api/services/searchService.js';
-import { db } from '../../api/utils/db.js';
+import { searchProviders } from '../../api-lib/services/searchService.js';
+import { db } from '../../api-lib/utils/db.js';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       providerProfile: {

@@ -86,6 +86,7 @@ import adminPlansIndexHandler from './routes/admin/subscriptions/plans/index.js'
 import adminPlansDetailHandler from './routes/admin/subscriptions/plans/[id].js';
 import subscriptionsCreateOrderHandler from './routes/subscriptions/create-order.js';
 import subscriptionsVerifyPaymentHandler from './routes/subscriptions/verify-payment.js';
+import subscriptionsWebhookHandler from './routes/subscriptions/webhook.js';
 
 // Consultation Handler Imports
 import consultationsIndexHandler from './routes/consultations/index.js';
@@ -336,6 +337,7 @@ app.post('/api/subscriptions/activate', adapt(subscriptionsActivateHandler));
 app.post('/api/subscriptions/cancel', adapt(subscriptionsCancelHandler));
 app.post('/api/subscriptions/create-order', adapt(subscriptionsCreateOrderHandler));
 app.post('/api/subscriptions/verify-payment', adapt(subscriptionsVerifyPaymentHandler));
+app.post('/api/subscriptions/webhook', adapt(subscriptionsWebhookHandler));
 
 app.post('/api/admin/subscriptions/plans', adapt(adminPlansIndexHandler));
 app.put('/api/admin/subscriptions/plans/:id', adapt(adminPlansDetailHandler));

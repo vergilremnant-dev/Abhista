@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { isValidTransition } from '../../api/services/quotationWorkflow.js';
-import { calculateAndValidatePricing } from '../../api/services/pricingEngine.js';
-import { createQuotation } from '../../api/services/quotationService.js';
-import { db } from '../../api/utils/db.js';
+import { isValidTransition } from '../../api-lib/services/quotationWorkflow.js';
+import { calculateAndValidatePricing } from '../../api-lib/services/pricingEngine.js';
+import { createQuotation } from '../../api-lib/services/quotationService.js';
+import { db } from '../../api-lib/utils/db.js';
 import { PricingModel, QuotationStatus } from '@prisma/client';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       requirement: {

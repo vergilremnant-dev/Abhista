@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { generateAccessToken, verifyToken } from '../../api/utils/auth.js';
+import { generateAccessToken, verifyToken } from '../../api-lib/utils/auth.js';
 import { VercelRequest } from '@vercel/node';
 
 describe('Auth Utility Tests', () => {

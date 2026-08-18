@@ -3,27 +3,38 @@ import crypto from 'crypto';
 import { SubscriptionStatus, PaymentStatus, PaymentType } from '@prisma/client';
 
 // Mock DB
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
+  const mockPlan = {
+    findUnique: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+  };
+  const mockSub = {
+    findMany: vi.fn(),
+    findFirst: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    updateMany: vi.fn(),
+  };
+  const mockPay = {
+    create: vi.fn(),
+    findFirst: vi.fn(),
+    update: vi.fn(),
+  };
+  const mockDb = {
+    subscriptionPlan: mockPlan,
+    userSubscription: mockSub,
+    payment: mockPay,
+    $transaction: vi.fn(),
+  };
+
+  mockDb.$transaction.mockImplementation(async (cb: any) => {
+    return await cb(mockDb);
+  });
+
   return {
-    db: {
-      subscriptionPlan: {
-        findUnique: vi.fn(),
-        findMany: vi.fn(),
-        create: vi.fn(),
-        update: vi.fn(),
-      },
-      userSubscription: {
-        findMany: vi.fn(),
-        findFirst: vi.fn(),
-        create: vi.fn(),
-        update: vi.fn(),
-      },
-      payment: {
-        create: vi.fn(),
-        findFirst: vi.fn(),
-        update: vi.fn(),
-      },
-    },
+    db: mockDb,
   };
 });
 
@@ -42,13 +53,14 @@ vi.mock('razorpay', () => {
   };
 });
 
-import { db } from '../../api/utils/db.js';
+import { db } from '../../api-lib/utils/db.js';
 import {
   createRazorpayOrder,
   verifyRazorpayPayment,
-} from '../../api/services/subscriptionService.js';
+} from '../../api-lib/services/subscriptionService.js';
+import webhookHandler from '../../api-lib/routes/subscriptions/webhook.js';
 
-describe('Razorpay Payment Flow Integration', () => {
+describe('Razorpay Payment Flow Integration & Webhooks', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -57,6 +69,7 @@ describe('Razorpay Payment Flow Integration', () => {
       ...originalEnv,
       RAZORPAY_KEY_ID: 'rzp_test_mock_key_id',
       RAZORPAY_KEY_SECRET: 'mock_key_secret_1234567890',
+      RAZORPAY_WEBHOOK_SECRET: 'mock_webhook_secret_99999',
     };
   });
 
@@ -78,7 +91,7 @@ describe('Razorpay Payment Flow Integration', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      vi.mocked(db.userSubscription.findMany).mockResolvedValueOnce([]);
+      vi.mocked(db.userSubscription.findFirst).mockResolvedValueOnce(null);
 
       await expect(createRazorpayOrder('user_123', 1)).rejects.toThrow(
         'Razorpay API keys are not configured in environment variables'
@@ -99,19 +112,16 @@ describe('Razorpay Payment Flow Integration', () => {
       });
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 15);
-      vi.mocked(db.userSubscription.findMany).mockResolvedValueOnce([
-        {
-          id: 10,
-          userId: 'user_123',
-          planId: 1,
-          status: SubscriptionStatus.ACTIVE,
-          startDate: new Date(),
-          endDate: futureDate,
-          transactionReference: 'tx_123',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
+      vi.mocked(db.userSubscription.findFirst).mockResolvedValueOnce({
+        id: 'sub_10',
+        userId: 'user_123',
+        planId: 1,
+        status: SubscriptionStatus.ACTIVE,
+        startDate: new Date(),
+        endDate: futureDate,
+        transactionReference: 'tx_123',
+        createdAt: new Date(),
+      });
 
       await expect(createRazorpayOrder('user_123', 1)).rejects.toThrow(
         'You already have an active subscription'
@@ -130,7 +140,7 @@ describe('Razorpay Payment Flow Integration', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      vi.mocked(db.userSubscription.findMany).mockResolvedValueOnce([]);
+      vi.mocked(db.userSubscription.findFirst).mockResolvedValueOnce(null);
       mockOrdersCreate.mockResolvedValueOnce({
         id: 'order_test_12345',
         amount: 99900,
@@ -148,7 +158,6 @@ describe('Razorpay Payment Flow Integration', () => {
         razorpaySignature: null,
         planId: 1,
         createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
       const res = await createRazorpayOrder('user_123', 1);
@@ -159,7 +168,6 @@ describe('Razorpay Payment Flow Integration', () => {
         currency: 'INR',
         keyId: 'rzp_test_mock_key_id',
       });
-      // Ensure secret is never returned in client payload
       expect((res as Record<string, unknown>).keySecret).toBeUndefined();
       expect(mockOrdersCreate).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -175,7 +183,6 @@ describe('Razorpay Payment Flow Integration', () => {
     const paymentId = 'pay_test_888';
     const secret = 'mock_key_secret_1234567890';
 
-    // Generate valid signature using HMAC SHA256
     const validSignature = crypto
       .createHmac('sha256', secret)
       .update(`${orderId}|${paymentId}`)
@@ -194,7 +201,6 @@ describe('Razorpay Payment Flow Integration', () => {
         razorpaySignature: null,
         planId: 1,
         createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
       await expect(
@@ -233,12 +239,11 @@ describe('Razorpay Payment Flow Integration', () => {
         planId: 1,
         plan: mockPlan,
         createdAt: new Date(),
-        updatedAt: new Date(),
       } as any);
 
-      vi.mocked(db.userSubscription.findMany).mockResolvedValueOnce([]);
+      vi.mocked(db.userSubscription.findFirst).mockResolvedValueOnce(null);
       vi.mocked(db.userSubscription.create).mockResolvedValueOnce({
-        id: 101,
+        id: 'sub_101',
         userId: 'user_123',
         planId: 1,
         status: SubscriptionStatus.ACTIVE,
@@ -246,7 +251,6 @@ describe('Razorpay Payment Flow Integration', () => {
         endDate: new Date(),
         transactionReference: paymentId,
         createdAt: new Date(),
-        updatedAt: new Date(),
         plan: mockPlan,
       });
 
@@ -266,6 +270,98 @@ describe('Razorpay Payment Flow Integration', () => {
           razorpayPaymentId: paymentId,
           razorpaySignature: validSignature,
         },
+      });
+    });
+  });
+
+  describe('Razorpay Webhook Handler', () => {
+    const orderId = 'order_test_999';
+    const paymentId = 'pay_test_888';
+    const secret = 'mock_webhook_secret_99999';
+
+    const testBody = {
+      event: 'order.paid',
+      payload: {
+        payment: {
+          entity: {
+            id: paymentId,
+            order_id: orderId,
+            amount: 99900,
+            status: 'captured',
+          },
+        },
+      },
+    };
+
+    const validSignature = crypto
+      .createHmac('sha256', secret)
+      .update(JSON.stringify(testBody))
+      .digest('hex');
+
+    it('should reject webhooks with invalid signatures', async () => {
+      const req = {
+        method: 'POST',
+        headers: {
+          'x-razorpay-signature': 'invalid_signature_hex',
+        },
+        body: testBody,
+        rawBody: JSON.stringify(testBody),
+      } as any;
+
+      const res = {
+        status: vi.fn().mockReturnThis(),
+        json: vi.fn(),
+      } as any;
+
+      await webhookHandler(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Invalid signature' }));
+    });
+
+    it('should process success webhooks atomically and idempotently', async () => {
+      const mockPlan = {
+        id: 1,
+        name: 'Pro Pass',
+        price: 999,
+        durationDays: 30,
+      };
+
+      vi.mocked(db.payment.findFirst).mockResolvedValueOnce({
+        id: 'pay_rec_1',
+        userId: 'user_123',
+        amount: 999,
+        status: PaymentStatus.PENDING,
+        txRef: orderId,
+        planId: 1,
+        plan: mockPlan,
+      } as any);
+
+      const req = {
+        method: 'POST',
+        headers: {
+          'x-razorpay-signature': validSignature,
+        },
+        body: testBody,
+        rawBody: JSON.stringify(testBody),
+      } as any;
+
+      const res = {
+        status: vi.fn().mockReturnThis(),
+        json: vi.fn(),
+      } as any;
+
+      await webhookHandler(req, res);
+
+      expect(res.status).not.toHaveBeenCalledWith(400);
+      expect(res.status).not.toHaveBeenCalledWith(500);
+
+      expect(db.payment.update).toHaveBeenCalledWith({
+        where: { id: 'pay_rec_1' },
+        data: expect.objectContaining({
+          status: PaymentStatus.SUCCESS,
+          razorpayPaymentId: paymentId,
+        }),
       });
     });
   });

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { isValidTransition } from '../../api/services/workflowService.js';
-import { createRequirement } from '../../api/services/requirementService.js';
-import { db } from '../../api/utils/db.js';
+import { isValidTransition } from '../../api-lib/services/workflowService.js';
+import { createRequirement } from '../../api-lib/services/requirementService.js';
+import { db } from '../../api-lib/utils/db.js';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       requirement: {

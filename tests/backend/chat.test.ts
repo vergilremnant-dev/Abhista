@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createConversation, sendMessage, editMessage, deleteMessage, updateReadReceipt, reactToMessage, updateUserPresence } from '../../api/services/chatService.js';
-import { db } from '../../api/utils/db.js';
+import { createConversation, sendMessage, editMessage, deleteMessage, updateReadReceipt, reactToMessage, updateUserPresence } from '../../api-lib/services/chatService.js';
+import { db } from '../../api-lib/utils/db.js';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       conversation: {

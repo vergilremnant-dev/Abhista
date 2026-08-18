@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { isValidTransition } from '../../api/services/appointmentWorkflow.js';
-import { checkConflict, getProviderAvailableSlots, createAppointment } from '../../api/services/appointmentService.js';
-import { db } from '../../api/utils/db.js';
+import { isValidTransition } from '../../api-lib/services/appointmentWorkflow.js';
+import { checkConflict, getProviderAvailableSlots, createAppointment } from '../../api-lib/services/appointmentService.js';
+import { db } from '../../api-lib/utils/db.js';
 import { AppointmentStatus } from '@prisma/client';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       appointment: {

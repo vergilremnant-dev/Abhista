@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { isValidTransition } from '../../api/services/projectWorkflow.js';
-import { transitionProjectStatus, createProjectMilestone, createWorkOrder } from '../../api/services/projectService.js';
-import { db } from '../../api/utils/db.js';
+import { isValidTransition } from '../../api-lib/services/projectWorkflow.js';
+import { transitionProjectStatus, createProjectMilestone, createWorkOrder } from '../../api-lib/services/projectService.js';
+import { db } from '../../api-lib/utils/db.js';
 import { ProjectStatus } from '@prisma/client';
 
-vi.mock('../../api/utils/db.js', () => {
+vi.mock('../../api-lib/utils/db.js', () => {
   return {
     db: {
       project: {
