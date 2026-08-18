@@ -150,21 +150,25 @@ export default function TradeProfessionalDashboard() {
       {/* 2. KPI Cards */}
       <section className="grid grid-cols-2 lg:grid-cols-6 gap-4">
         {[
-          { label: 'Active Projects', value: '4', desc: 'In progress', icon: '🏗️', color: 'bg-emerald-50 text-emerald-800' },
-          { label: 'Available leads', value: '18', desc: 'Matching trades', icon: '⚡', color: 'bg-blue-50 text-blue-800' },
-          { label: 'Pending Quotes', value: '2', desc: 'Awaiting client review', icon: '⏳', color: 'bg-amber-50 text-amber-800' },
-          { label: 'Completed projects', value: '42', desc: 'Successful handovers', icon: '✅', color: 'bg-indigo-50 text-indigo-800' },
-          { label: 'Upcoming visits', value: '1', desc: 'Site agendas today', icon: '📅', color: 'bg-stone-100 text-stone-900' },
-          { label: 'Unread chats', value: '0', desc: 'Messages center logs', icon: '✉️', color: 'bg-purple-50 text-purple-800' },
+          { label: 'Active Projects', value: '4', desc: 'In progress', icon: '🏗️', color: 'bg-emerald-50 text-emerald-800', path: '/workspace/projects' },
+          { label: 'Available leads', value: '18', desc: 'Matching trades', icon: '⚡', color: 'bg-blue-50 text-blue-800', path: '/workspace/leads' },
+          { label: 'Pending Quotes', value: '2', desc: 'Awaiting client review', icon: '⏳', color: 'bg-amber-50 text-amber-800', path: '/workspace/quotations' },
+          { label: 'Completed projects', value: '42', desc: 'Successful handovers', icon: '✅', color: 'bg-indigo-50 text-indigo-800', path: '/workspace/projects' },
+          { label: 'Upcoming visits', value: '1', desc: 'Site agendas today', icon: '📅', color: 'bg-stone-100 text-stone-900', path: '/workspace/bookings' },
+          { label: 'Unread chats', value: '0', desc: 'Messages center logs', icon: '✉️', color: 'bg-purple-50 text-purple-800', path: '/workspace/inbox' },
         ].map((kpi, idx) => (
-          <div key={idx} className="bg-white border border-light-border p-4 rounded-2xl shadow-apple-xs hover:shadow-apple-sm transition flex flex-col justify-between">
+          <button 
+            key={idx} 
+            onClick={() => navigate(kpi.path)}
+            className="bg-white border border-light-border p-4 rounded-2xl shadow-apple-xs hover:shadow-apple-sm hover:border-emerald-600/30 transition flex flex-col justify-between cursor-pointer text-left focus:outline-none"
+          >
             <span className={`text-base p-2 rounded-xl w-fit ${kpi.color}`}>{kpi.icon}</span>
             <div className="mt-4 space-y-0.5">
               <span className="block text-2xl font-black text-stone-900">{kpi.value}</span>
               <span className="block text-[9.5px] font-bold text-stone-450 uppercase tracking-wider">{kpi.label}</span>
               <span className="block text-[8px] text-stone-400 font-semibold">{kpi.desc}</span>
             </div>
-          </div>
+          </button>
         ))}
       </section>
 
