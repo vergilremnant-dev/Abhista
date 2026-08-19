@@ -235,8 +235,8 @@ export default function ProfessionalBookings() {
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white border border-stone-200 p-6 rounded-3xl shadow-sm relative">
         <div className="space-y-1">
           <span className="text-[10px] font-black uppercase text-stone-400 tracking-wider font-sans">Provider Portal</span>
-          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 leading-tight font-serif">Service Bookings & Schedule</h1>
-          <p className="text-xs text-stone-500 font-medium">Manage inbound customer booking requests, schedule site visits, and complete orders.</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 leading-tight font-serif">Project Requests & Schedule</h1>
+          <p className="text-xs text-stone-500 font-medium">Manage inbound project requests, schedule evaluations, and track milestone executions.</p>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
@@ -278,8 +278,8 @@ export default function ProfessionalBookings() {
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: 'New Requests', count: stats.pending, icon: '📩', color: 'bg-amber-50 text-amber-800' },
-          { label: 'Active Orders', count: stats.active, icon: '⚡', color: 'bg-emerald-50 text-emerald-800' },
-          { label: 'Completed Visits', count: stats.completed, icon: '✓', color: 'bg-sky-50 text-sky-800' },
+          { label: 'Active Projects', count: stats.active, icon: '⚡', color: 'bg-emerald-50 text-emerald-800' },
+          { label: 'Completed Projects', count: stats.completed, icon: '✓', color: 'bg-sky-50 text-sky-800' },
           { label: 'Completed Value', count: `₹${stats.totalRevenue.toLocaleString()}`, icon: '💰', color: 'bg-purple-50 text-purple-800' },
         ].map((kpi, idx) => (
           <div key={idx} className="bg-white border border-stone-200 p-4 rounded-2xl shadow-sm flex flex-col justify-between">
@@ -394,7 +394,7 @@ export default function ProfessionalBookings() {
                                 disabled={actionLoadingId === b.id}
                                 className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider transition disabled:opacity-50 cursor-pointer"
                               >
-                                Accept Booking
+                                Accept Request
                               </button>
                               <button
                                 onClick={() => handleReject(b.id)}
@@ -412,7 +412,7 @@ export default function ProfessionalBookings() {
                               disabled={actionLoadingId === b.id}
                               className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider transition disabled:opacity-50 cursor-pointer"
                             >
-                              Start Service
+                              Start Project
                             </button>
                           )}
 
@@ -442,7 +442,7 @@ export default function ProfessionalBookings() {
             /* Calendar View */
             <div className="bg-white border border-stone-200 p-6 rounded-3xl shadow-sm space-y-6">
               <div className="flex justify-between items-center pb-2 border-b border-stone-100">
-                <h3 className="text-xs font-black uppercase text-stone-900 tracking-wider">Bookings Calendar</h3>
+                <h3 className="text-xs font-black uppercase text-stone-900 tracking-wider">Schedule Calendar</h3>
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-stone-400 font-bold uppercase">Pick Date:</span>
                   <input
@@ -454,11 +454,11 @@ export default function ProfessionalBookings() {
                 </div>
               </div>
 
-              {/* Day Appointments for Selected Date */}
+              {/* Day Schedule for Selected Date */}
               <div className="space-y-3">
                 <h4 className="text-xs font-bold text-stone-700">Schedule for {selectedCalendarDate}:</h4>
                 {calendarBookings.length === 0 ? (
-                  <p className="text-xs text-stone-400 italic py-4">No bookings scheduled for this date.</p>
+                  <p className="text-xs text-stone-400 italic py-4">No requests scheduled for this date.</p>
                 ) : (
                   calendarBookings.map((cb) => (
                     <div key={cb.id} className="p-3.5 bg-stone-50 rounded-xl border border-stone-200 flex justify-between items-center text-xs">
@@ -508,8 +508,8 @@ export default function ProfessionalBookings() {
                   <span className="font-bold text-stone-800">{selectedBooking.categoryName}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-stone-50">
-                  <span className="text-[10px] text-stone-400 font-bold uppercase">Date & Slot</span>
-                  <span className="font-bold text-stone-800">{selectedBooking.preferredDate} ({selectedBooking.preferredTime})</span>
+                  <span className="text-[10px] text-stone-400 font-bold uppercase">Expected Start Date</span>
+                  <span className="font-bold text-stone-800">{selectedBooking.preferredDate}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-stone-50">
                   <span className="text-[10px] text-stone-400 font-bold uppercase">Estimated Budget</span>
@@ -552,7 +552,7 @@ export default function ProfessionalBookings() {
                     disabled={actionLoadingId === selectedBooking.id}
                     className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold uppercase text-[10px] tracking-wider transition disabled:opacity-50"
                   >
-                    Start Service
+                    Start Project
                   </button>
                 )}
 

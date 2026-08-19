@@ -23,10 +23,13 @@ const CUSTOMER_SIDEBAR_ITEMS: SidebarItem[] = [
 
 const PROVIDER_SIDEBAR_ITEMS: SidebarItem[] = [
   { name: 'Dashboard', path: '/workspace/dashboard', icon: '📊' },
-  { name: 'Leads', path: '/workspace/leads', icon: '📋' },
+  { name: 'Project Requests', path: '/workspace/bookings', icon: '📩' },
+  { name: 'Leads', path: '/workspace/leads', icon: '⚡' },
+  { name: 'Projects', path: '/workspace/projects', icon: '🏗️' },
+  { name: 'Quotations', path: '/workspace/quotations', icon: '📝' },
   { name: 'Inbox', path: '/workspace/inbox', icon: '💬' },
+  { name: 'Finance & Earnings', path: '/workspace/finance', icon: '💳' },
   { name: 'Profile & Settings', path: '/workspace/profile', icon: '⚙️' },
-  { name: 'About DBC', path: '/know-more', icon: 'ℹ️' },
 ];
 
 export default function WorkspaceLayout() {

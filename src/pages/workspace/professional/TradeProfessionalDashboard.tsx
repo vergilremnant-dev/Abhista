@@ -154,7 +154,7 @@ export default function TradeProfessionalDashboard() {
           { label: 'Available leads', value: '18', desc: 'Matching trades', icon: '⚡', color: 'bg-blue-50 text-blue-800', path: '/workspace/leads' },
           { label: 'Pending Quotes', value: '2', desc: 'Awaiting client review', icon: '⏳', color: 'bg-amber-50 text-amber-800', path: '/workspace/quotations' },
           { label: 'Completed projects', value: '42', desc: 'Successful handovers', icon: '✅', color: 'bg-indigo-50 text-indigo-800', path: '/workspace/projects' },
-          { label: 'Upcoming visits', value: '1', desc: 'Site agendas today', icon: '📅', color: 'bg-stone-100 text-stone-900', path: '/workspace/bookings' },
+          { label: 'Project Requests', value: '1', desc: 'Review required', icon: '📋', color: 'bg-stone-100 text-stone-900', path: '/workspace/bookings' },
           { label: 'Unread chats', value: '0', desc: 'Messages center logs', icon: '✉️', color: 'bg-purple-50 text-purple-800', path: '/workspace/inbox' },
         ].map((kpi, idx) => (
           <button 
@@ -340,7 +340,7 @@ export default function TradeProfessionalDashboard() {
               {[
                 { label: 'Leads', path: '/workspace/leads', icon: '⚡' },
                 { label: 'Projects', path: '/workspace/projects', icon: '🏗️' },
-                { label: 'Calendar', path: '/workspace/bookings', icon: '📅' },
+                { label: 'Requests', path: '/workspace/bookings', icon: '📋' },
                 { label: 'Quotations', path: '/workspace/quotations', icon: '📝' },
                 { label: 'Inbox', path: '/workspace/inbox', icon: '✉️' },
                 { label: 'Profile', path: '/workspace/profile', icon: '⚙️' }
