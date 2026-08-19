@@ -22,9 +22,32 @@ interface BookingDetailsProps {
   onCancel: () => void;
 }
 
+const getNextStepDescription = (status: string) => {
+  const norm = status.trim().toLowerCase();
+  if (norm.includes('submitted') || norm.includes('requested')) {
+    return 'The professional will review your requirements and get in touch to discuss details.';
+  }
+  if (norm.includes('review') || norm.includes('accepted') || norm.includes('confirmed')) {
+    return 'Discussion is ongoing. Share any site blueprints or specifications with the professional.';
+  }
+  if (norm.includes('started') || norm.includes('progress')) {
+    return 'Your project is active. Work is ongoing according to the agreed milestones.';
+  }
+  if (norm.includes('completed')) {
+    return 'Your project is completed. You can leave a review or download documents.';
+  }
+  if (norm.includes('cancelled')) {
+    return 'This request has been cancelled.';
+  }
+  if (norm.includes('declined') || norm.includes('rejected')) {
+    return 'The professional has declined this request.';
+  }
+  return 'Review the progress and coordinate with the professional via chat.';
+};
+
 export function BookingDetails({ booking, onClose, onReschedule, onCancel }: BookingDetailsProps) {
   const norm = booking.status.trim().toLowerCase();
-  const canRescheduleOrCancel = ['confirmed', 'scheduled'].includes(norm);
+  const canRescheduleOrCancel = ['confirmed', 'scheduled', 'under review', 'request submitted'].includes(norm);
 
   return (
     <div className="bg-white border border-stone-200 rounded-2xl shadow-lg p-6 space-y-6 text-left transition duration-200">
@@ -46,6 +69,16 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
         >
           ✕
         </button>
+      </div>
+
+      {/* Next Step Info Box */}
+      <div className="bg-emerald-50/40 border border-emerald-100/70 p-3.5 rounded-xl space-y-1 text-left">
+        <span className="block text-[8px] font-black uppercase text-emerald-800 tracking-wider">
+          👉 Next Action Step
+        </span>
+        <p className="text-[10px] text-stone-600 font-semibold leading-relaxed">
+          {getNextStepDescription(booking.status)}
+        </p>
       </div>
 
       {/* Main Metadata Grid */}

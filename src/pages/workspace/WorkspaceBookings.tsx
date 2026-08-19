@@ -28,13 +28,13 @@ interface Booking {
 }
 
 function mapApiBookingToBooking(b: ApiBooking): Booking {
-  let mappedStatus = 'Requested';
-  if (b.bookingStatus === 'ACCEPTED') mappedStatus = 'Confirmed';
-  else if (b.bookingStatus === 'IN_PROGRESS') mappedStatus = 'In Progress';
-  else if (b.bookingStatus === 'COMPLETED') mappedStatus = 'Completed';
+  let mappedStatus = 'Request Submitted';
+  if (b.bookingStatus === 'ACCEPTED') mappedStatus = 'Under Review';
+  else if (b.bookingStatus === 'IN_PROGRESS') mappedStatus = 'Project Started';
+  else if (b.bookingStatus === 'COMPLETED') mappedStatus = 'Project Completed';
   else if (b.bookingStatus === 'CANCELLED') mappedStatus = 'Cancelled';
   else if (b.bookingStatus === 'REJECTED') mappedStatus = 'Declined';
-  else if (b.bookingStatus === 'REQUESTED') mappedStatus = 'Requested';
+  else if (b.bookingStatus === 'REQUESTED') mappedStatus = 'Request Submitted';
 
   return {
     id: b.id,
@@ -231,10 +231,10 @@ function CustomerBookings() {
               className="bg-stone-50 hover:bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-emerald-600 transition"
             >
               <option value="ALL">All Statuses</option>
-              <option value="REQUESTED">Requested</option>
-              <option value="CONFIRMED">Confirmed</option>
-              <option value="IN PROGRESS">In Progress</option>
-              <option value="COMPLETED">Completed</option>
+              <option value="REQUEST SUBMITTED">Request Submitted</option>
+              <option value="UNDER REVIEW">Under Review</option>
+              <option value="PROJECT STARTED">Project Started</option>
+              <option value="PROJECT COMPLETED">Project Completed</option>
               <option value="CANCELLED">Cancelled</option>
               <option value="DECLINED">Declined</option>
             </select>
