@@ -29,11 +29,14 @@ export function BookServicePage() {
   const [city, setCity] = useState(selectedCity || 'Hyderabad');
   const [state, setState] = useState('Telangana');
   const [notes, setNotes] = useState('');
-  const [budget, setBudget] = useState('');
+  const [timeline, setTimeline] = useState('1–3 months');
+  const [budgetRange, setBudgetRange] = useState('₹5L – ₹15L');
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [createdBookingNumber, setCreatedBookingNumber] = useState('');
 
   // Sync city state when selectedCity changes
   useEffect(() => {
@@ -111,6 +114,15 @@ export function BookServicePage() {
     }
   };
 
+  const BUDGET_MAPPING: Record<string, number | null> = {
+    'Under ₹1 Lakh': 50000,
+    '₹1L – ₹5L': 300000,
+    '₹5L – ₹15L': 1000000,
+    '₹15L – ₹50L': 3250000,
+    '₹50L+': 7500000,
+    'To Be Discussed': null,
+  };
+
   async function handleBookingSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -135,7 +147,16 @@ export function BookServicePage() {
       return;
     }
 
+    if (!notes.trim()) {
+      setError('Please provide a project description explaining what you want to build or discuss.');
+      setLoading(false);
+      return;
+    }
+
     try {
+      const fullNotes = `Expected Timeline: ${timeline}\nBudget Range: ${budgetRange}\n\nProject Description:\n${notes}`;
+      const numericBudget = BUDGET_MAPPING[budgetRange] || null;
+
       const response = await bookingApi.createBooking({
         providerId,
         categoryId: categoryId || 1,
@@ -144,14 +165,12 @@ export function BookServicePage() {
         customerAddress: address,
         city,
         state,
-        notes,
-        estimatedBudget: budget ? Number(budget) : null,
+        notes: fullNotes,
+        estimatedBudget: numericBudget,
       });
 
-      setMessage(`Success! Project request ${response.bookingNumber} created successfully.`);
-      setTimeout(() => {
-        navigate('/workspace/bookings');
-      }, 1500);
+      setCreatedBookingNumber(response.bookingNumber);
+      setIsSubmitted(true);
     } catch (err: unknown) {
       let errMsg = 'Failed to submit request';
       if (axios.isAxiosError(err)) {
@@ -163,6 +182,70 @@ export function BookServicePage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (isSubmitted) {
+    return (
+      <CustomerPageShell>
+        <div className="mx-auto max-w-xl text-center space-y-8 py-12 animate-in fade-in zoom-in duration-200">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-3xl mx-auto border border-emerald-200 shadow-xs font-serif font-black">
+            ✓
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight font-serif">
+              Project Request Submitted
+            </h1>
+            <p className="text-sm text-stone-600 font-medium leading-relaxed">
+              Your project request <span className="font-extrabold text-stone-900">#{createdBookingNumber}</span> has been successfully sent to <span className="font-extrabold text-stone-900">{selectedProvider?.fullName || selectedProvider?.businessName || 'DBC Professional'}</span>.
+            </p>
+          </div>
+
+          <div className="bg-white border border-stone-200 rounded-3xl p-6 text-left space-y-4 shadow-sm">
+            <h3 className="text-xs font-black uppercase tracking-wider text-stone-900">What happens next?</h3>
+            <div className="space-y-3">
+              {[
+                { label: 'Project request dispatched to professional', checked: true },
+                { label: 'Initial specifications verified by DBC', checked: true },
+                { label: 'Professional reviews requirements & drawings', checked: false, current: true },
+                { label: 'Professional contacts you via chat or phone', checked: false },
+                { label: 'Discuss details & receive structural quote proposal', checked: false },
+                { label: 'Authorize proposal & release milestones in your dashboard', checked: false }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3 text-[11.5px] font-semibold">
+                  <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[9px] flex-shrink-0 border ${
+                    item.checked 
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300' 
+                      : item.current 
+                        ? 'bg-amber-50 text-amber-800 border-amber-300 animate-pulse' 
+                        : 'bg-stone-50 text-stone-300 border-stone-200'
+                  }`}>
+                    {item.checked ? '✓' : item.current ? '→' : '•'}
+                  </span>
+                  <span className={`${item.checked ? 'text-stone-400 line-through font-normal' : item.current ? 'text-stone-900 font-black' : 'text-stone-500 font-semibold'}`}>
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => navigate('/workspace/bookings')}
+              className="dbc-btn dbc-btn-primary h-11 px-6 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer"
+            >
+              View My Requests
+            </button>
+            <button
+              onClick={() => navigate('/')}
+              className="dbc-btn dbc-btn-outline h-11 px-6 rounded-lg text-xs font-bold uppercase tracking-wider bg-white cursor-pointer"
+            >
+              Back to Marketplace
+            </button>
+          </div>
+        </div>
+      </CustomerPageShell>
+    );
   }
 
   return (
@@ -435,35 +518,69 @@ export function BookServicePage() {
                     </div>
                   </div>
 
-                  {/* Estimated Budget */}
+                  {/* Project Timeline */}
                   <div>
                     <label className="block text-[11px] font-black uppercase tracking-wider text-stone-600 mb-1.5">
-                      Estimated Budget (₹) <span className="text-stone-400 font-normal lowercase">(optional)</span>
+                      Project Timeline <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-stone-400 text-xs font-bold pointer-events-none">
-                        ₹
-                      </span>
-                      <input
-                        type="number"
-                        placeholder="e.g. 5000"
-                        value={budget}
-                        onChange={(e) => setBudget(e.target.value)}
-                        className="w-full h-11 rounded-xl border border-stone-200 bg-white pl-8 pr-3.5 py-2.5 text-xs font-semibold text-stone-900 placeholder:text-stone-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition"
-                      />
+                      <select
+                        value={timeline}
+                        onChange={(e) => setTimeline(e.target.value)}
+                        className="w-full h-11 rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-stone-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition appearance-none cursor-pointer pr-10"
+                      >
+                        <option value="Immediately">Immediately</option>
+                        <option value="Within 1 month">Within 1 month</option>
+                        <option value="1–3 months">1–3 months</option>
+                        <option value="3–6 months">3–6 months</option>
+                        <option value="6+ months">6+ months</option>
+                        <option value="Not decided yet">Not decided yet</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-stone-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Notes / Description */}
+                  {/* Approximate Budget */}
                   <div>
                     <label className="block text-[11px] font-black uppercase tracking-wider text-stone-600 mb-1.5">
-                      Job Description & Scope Notes <span className="text-stone-400 font-normal lowercase">(optional)</span>
+                      Approximate Budget <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={budgetRange}
+                        onChange={(e) => setBudgetRange(e.target.value)}
+                        className="w-full h-11 rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-stone-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition appearance-none cursor-pointer pr-10"
+                      >
+                        <option value="Under ₹1 Lakh">Under ₹1 Lakh</option>
+                        <option value="₹1L – ₹5L">₹1L – ₹5L</option>
+                        <option value="₹5L – ₹15L">₹5L – ₹15L</option>
+                        <option value="₹15L – ₹50L">₹15L – ₹50L</option>
+                        <option value="₹50L+">₹50L+</option>
+                        <option value="To Be Discussed">To Be Discussed</option>
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-stone-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Project Description */}
+                  <div>
+                    <label className="block text-[11px] font-black uppercase tracking-wider text-stone-600 mb-1.5">
+                      Project Description & Scope Requirements <span className="text-rose-500">*</span>
                     </label>
                     <textarea
-                      placeholder="Describe work required, dimensions, preferred materials, or special site instructions..."
+                      required
+                      placeholder="Explain what you want to build, renovate, design, or repair. Mention any dimensions, special instructions, or specifications..."
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      rows={3}
+                      rows={4}
                       className="w-full rounded-xl border border-stone-200 bg-white p-3.5 text-xs font-medium text-stone-900 placeholder:text-stone-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition"
                     />
                   </div>
@@ -515,6 +632,18 @@ export function BookServicePage() {
                     </span>
                   </div>
 
+                  {/* Expected Timeline */}
+                  <div className="flex justify-between items-start gap-3 border-t border-stone-100 pt-2.5">
+                    <span className="text-stone-500 font-medium">Timeline</span>
+                    <span className="font-bold text-stone-900 text-right">{timeline}</span>
+                  </div>
+
+                  {/* Budget */}
+                  <div className="flex justify-between items-start gap-3 border-t border-stone-100 pt-2.5">
+                    <span className="text-stone-500 font-medium">Budget Range</span>
+                    <span className="font-bold text-stone-900 text-right">{budgetRange}</span>
+                  </div>
+
                   {/* Address */}
                   <div className="flex justify-between items-start gap-3 border-t border-stone-100 pt-2.5">
                     <span className="text-stone-500 font-medium">Address</span>
@@ -522,16 +651,16 @@ export function BookServicePage() {
                       {address ? `${address}, ${city}` : 'Enter address'}
                     </span>
                   </div>
+                </div>
 
-                  {/* Estimated Budget (if provided) */}
-                  {budget ? (
-                    <div className="flex justify-between items-start gap-3 border-t border-stone-100 pt-2.5">
-                      <span className="text-stone-500 font-medium">Est. Budget</span>
-                      <span className="font-black text-emerald-800 text-right">
-                        ₹{Number(budget).toLocaleString()}
-                      </span>
-                    </div>
-                  ) : null}
+                {/* Payment Messaging Info Box */}
+                <div className="rounded-xl bg-emerald-50/50 border border-emerald-100 p-3.5 space-y-1.5 text-left">
+                  <div className="flex items-center gap-1.5 text-[10.5px] font-black uppercase text-emerald-800 tracking-wider">
+                    <span>💵 Zero Upfront Payments</span>
+                  </div>
+                  <p className="text-[10px] text-stone-600 font-medium leading-relaxed">
+                    No payment is required to submit this project request. You will discuss the project scope and proposal with the professional before starting work.
+                  </p>
                 </div>
 
                 {/* Trust & Guarantee Box */}
