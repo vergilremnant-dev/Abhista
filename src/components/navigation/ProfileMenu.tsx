@@ -112,23 +112,23 @@ export function ProfileMenu({ user, onLogout, onNavigateWorkspace, onNavigateHel
             <button
               onClick={() => {
                 setIsOpen(false);
-                navigate('/workspace/bookings');
+                navigate(user?.role === 'ROLE_PROVIDER' ? '/workspace/dashboard' : '/workspace/bookings');
               }}
               className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl font-semibold text-stone-700 hover:bg-stone-50 hover:text-stone-900 focus:outline-none transition cursor-pointer text-left"
             >
               <span className="text-sm">📅</span>
-              <span>My Bookings</span>
+              <span>{user?.role === 'ROLE_PROVIDER' ? 'Dashboard' : 'Project Requests'}</span>
             </button>
 
             <button
               onClick={() => {
                 setIsOpen(false);
-                navigate('/chat');
+                navigate('/workspace/inbox');
               }}
               className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl font-semibold text-stone-700 hover:bg-stone-50 hover:text-stone-900 focus:outline-none transition cursor-pointer text-left"
             >
               <span className="text-sm">💬</span>
-              <span>Chat Inbox</span>
+              <span>Messages</span>
             </button>
 
             <button

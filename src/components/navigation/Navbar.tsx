@@ -235,7 +235,7 @@ export function Navbar() {
                       <button
                         onClick={() => {
                           setIsInboxOpen(false);
-                          navigate('/chat');
+                          navigate('/workspace/inbox');
                         }}
                         className="text-[9px] font-extrabold text-emerald-800 hover:underline cursor-pointer focus:outline-none"
                       >
@@ -254,7 +254,7 @@ export function Navbar() {
                               key={convo.id}
                               onClick={() => {
                                 setIsInboxOpen(false);
-                                navigate(`/chat?convoId=${convo.id}`);
+                                navigate('/workspace/inbox');
                               }}
                               className="p-2.5 rounded-xl border border-stone-200 hover:border-emerald-600 hover:bg-stone-50 transition cursor-pointer text-left"
                             >

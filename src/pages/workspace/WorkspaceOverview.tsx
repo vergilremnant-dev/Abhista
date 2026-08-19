@@ -246,7 +246,7 @@ export default function WorkspaceOverview() {
               title="Message Professional"
               description="Coordinate via active chats"
               icon="💬"
-              onClick={() => navigate('/chat')}
+              onClick={() => navigate('/workspace/inbox')}
             />
             <QuickActionCard
               title={activeSub && activeSub.status === 'ACTIVE' ? "Premium Active" : "View Subscription"}
