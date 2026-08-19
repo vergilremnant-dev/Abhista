@@ -58,7 +58,7 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
       <div className="flex justify-between items-start gap-4 border-b border-stone-100 pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-bold text-stone-900 font-serif">{booking.projectTitle}</h3>
+            <h3 className="text-sm font-bold text-stone-900 font-serif">{booking.serviceCategory}</h3>
             <BookingStatusBadge status={booking.status} />
           </div>
           <p className="text-[9px] font-black uppercase text-stone-400 tracking-wider">
@@ -101,6 +101,13 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
         <div className="space-y-0.5">
           <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Target Start Date</span>
           <span className="block font-bold text-stone-700">{new Date(booking.scheduledDate).toLocaleDateString()}</span>
+        </div>
+        <div className="space-y-0.5">
+          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Submitted Date</span>
+          <span className="block font-bold text-stone-700">{new Date(booking.createdAt).toLocaleDateString()}</span>
+        </div>
+        <div className="space-y-0.5">
+          {/* Empty spacer for alignment */}
         </div>
         <div className="col-span-2 space-y-0.5">
           <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Project Location</span>
@@ -145,8 +152,10 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
               💬 Open Thread
             </button>
           )}
-          <span className="block text-[8px] text-stone-400 font-bold uppercase tracking-wide">
-            {!['requested', 'pending', 'request submitted'].includes(norm) ? 'Chat Active' : 'Available Post-Match'}
+          <span className="block text-[7.5px] text-stone-400 font-bold uppercase tracking-wide leading-relaxed">
+            {!['requested', 'pending', 'request submitted'].includes(norm)
+              ? 'Chat Active'
+              : 'Messaging becomes available once a professional is matched to your request'}
           </span>
         </div>
       </div>
@@ -162,7 +171,11 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
               Update Start Date
             </button>
             <button
-              onClick={onCancel}
+              onClick={() => {
+                if (window.confirm("Cancel this project request?\n\nThis action cannot be undone.")) {
+                  onCancel();
+                }
+              }}
               className="bg-rose-55/10 hover:bg-rose-55/20 text-rose-600 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center border border-rose-100"
             >
               Cancel Request
