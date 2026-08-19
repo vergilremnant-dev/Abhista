@@ -163,6 +163,10 @@ export async function cancelBooking(bookingId: string, customerId: string) {
     throw new Error('Unauthorized: You can only cancel your own bookings');
   }
 
+  if (booking.bookingStatus === 'IN_PROGRESS' || booking.bookingStatus === 'COMPLETED') {
+    throw new Error('Cannot cancel a project request that has already started or completed');
+  }
+
   const updated = await db.booking.update({
     where: { id: booking.id },
     data: { bookingStatus: BookingStatus.CANCELLED },

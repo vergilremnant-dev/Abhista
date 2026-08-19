@@ -38,7 +38,7 @@ export function MobileBottomNav() {
       { label: 'Home', path: '/', icon: '🏠' },
       { label: 'Discover', path: '/search', icon: '🔍' },
       { label: 'Active', path: '/workspace/overview', icon: '📋' },
-      { label: 'Messages', path: '/chat', icon: '💬' },
+      { label: 'Messages', path: '/workspace/inbox', icon: '💬' },
       { label: 'Profile', path: '/workspace/settings', icon: '👤' },
     ];
   };

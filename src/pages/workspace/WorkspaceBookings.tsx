@@ -116,10 +116,19 @@ function CustomerBookings() {
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking((prev) => (prev ? { ...prev, status: 'Cancelled', rawStatus: 'CANCELLED' } : null));
       }
-      alert('Booking cancelled successfully.');
+      alert('Project request cancelled successfully.');
     } catch (err: unknown) {
       console.error('Failed to cancel on server', err);
-      alert('Failed to cancel booking. Please try again.');
+      let errorMsg = 'Failed to cancel project request. Please try again.';
+      if (err && typeof err === 'object') {
+        const anyErr = err as any;
+        if (anyErr.response?.data?.message) {
+          errorMsg = `Failed to cancel project request: ${anyErr.response.data.message}`;
+        } else if (anyErr.message) {
+          errorMsg = `Failed to cancel project request: ${anyErr.message}`;
+        }
+      }
+      alert(errorMsg);
     }
   };
 
@@ -133,7 +142,33 @@ function CustomerBookings() {
     if (selectedBooking && selectedBooking.id === id) {
       setSelectedBooking((prev) => (prev ? { ...prev, status: 'Rescheduled', scheduledDate: nextWeek } : null));
     }
-    alert('Visit successfully rescheduled for next week.');
+    alert('Target start date successfully rescheduled for next week.');
+  };
+
+  const handleSelectBooking = async (bk: Booking) => {
+    setSelectedBooking(bk);
+    try {
+      const freshBooking = await bookingApi.getBookingDetails(bk.id);
+      const mapped = mapApiBookingToBooking(freshBooking as any);
+      setSelectedBooking(mapped);
+      setBookings((prev) =>
+        prev.map((b) => (b.id === bk.id ? mapped : b))
+      );
+    } catch (err) {
+      console.error('Failed to fetch fresh booking details', err);
+      let isPermissionOrNotFound = false;
+      if (err && typeof err === 'object') {
+        const anyErr = err as any;
+        if (anyErr.response?.status === 404 || anyErr.response?.status === 403) {
+          isPermissionOrNotFound = true;
+        }
+      }
+      if (isPermissionOrNotFound) {
+        alert('This project request is no longer available or you do not have permission to view it.');
+        setSelectedBooking(null);
+        setBookings((prev) => prev.filter((b) => b.id !== bk.id));
+      }
+    }
   };
 
   // Active statistics counts based on real live bookings
@@ -283,7 +318,7 @@ function CustomerBookings() {
                   <BookingCard
                     key={bk.id}
                     booking={bk}
-                    onSelect={() => setSelectedBooking(bk)}
+                    onSelect={() => handleSelectBooking(bk)}
                   />
                 ))}
               </div>
