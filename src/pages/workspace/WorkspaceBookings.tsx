@@ -171,14 +171,14 @@ function CustomerBookings() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-200 pb-5">
         <div className="space-y-1">
-          <h2 className="text-xl font-bold text-stone-900 font-serif">My Bookings</h2>
-          <p className="text-xs text-stone-500 font-medium">Track schedule, professional assignments, and live status of your service requests.</p>
+          <h2 className="text-xl font-bold text-stone-900 font-serif">Project Requests</h2>
+          <p className="text-xs text-stone-500 font-medium">Track timelines, professional assignments, and status of your project requests.</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={fetchBookings}
             className="border border-stone-200 hover:bg-stone-50 text-stone-700 font-bold text-xs px-3 py-2 rounded-xl transition cursor-pointer"
-            title="Refresh bookings"
+            title="Refresh requests"
           >
             🔄 Refresh
           </button>
@@ -186,7 +186,7 @@ function CustomerBookings() {
             onClick={() => navigate('/')}
             className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
           >
-            Browse Professionals
+            Find a Professional
           </button>
         </div>
       </div>
@@ -201,9 +201,9 @@ function CustomerBookings() {
         
         {/* Summary Row Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <BookingSummaryCard label="Requested & Upcoming" count={stats.upcoming} icon="📅" colorClass="text-emerald-600 bg-emerald-50/50" />
+          <BookingSummaryCard label="Submitted & Under Review" count={stats.upcoming} icon="📅" colorClass="text-emerald-600 bg-emerald-50/50" />
           <BookingSummaryCard label="In Progress" count={stats.active} icon="⚡" colorClass="text-amber-600 bg-amber-50/50" />
-          <BookingSummaryCard label="Completed Visits" count={stats.completed} icon="✓" colorClass="text-sky-600 bg-sky-50/50" />
+          <BookingSummaryCard label="Completed Projects" count={stats.completed} icon="✓" colorClass="text-sky-600 bg-sky-50/50" />
           <BookingSummaryCard label="Cancelled / Declined" count={stats.cancelled} icon="🚫" colorClass="text-rose-600 bg-rose-50/50" />
         </div>
 
@@ -215,7 +215,7 @@ function CustomerBookings() {
             <span className="text-stone-400 text-xs">🔍</span>
             <input
               type="text"
-              placeholder="Search bookings or pros..."
+              placeholder="Search requests or professionals..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-transparent border-none text-xs text-stone-800 px-2 focus:outline-none"

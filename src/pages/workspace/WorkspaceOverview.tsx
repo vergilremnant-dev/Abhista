@@ -179,10 +179,10 @@ export default function WorkspaceOverview() {
               {bookings.length > 0 ? (
                 <>
                   <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
-                    Active Service Bookings
+                    Active Project Requests
                   </h3>
                   <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
-                    Track the progress of your active bookings or message your assigned specialists for site coordination.
+                    Track the progress of your active project requests or message your assigned specialists for project details.
                   </p>
                 </>
               ) : requirements.length > 0 ? (
@@ -213,7 +213,7 @@ export default function WorkspaceOverview() {
                     onClick={() => navigate('/workspace/bookings')}
                     className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
                   >
-                    View Bookings
+                    View Requests
                   </button>
                   <button
                     onClick={() => navigate('/chat')}
@@ -234,7 +234,7 @@ export default function WorkspaceOverview() {
                     onClick={() => navigate('/')}
                     className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
                   >
-                    Explore Professionals
+                    Find a Professional
                   </button>
                 </>
               ) : (
@@ -249,7 +249,7 @@ export default function WorkspaceOverview() {
                     onClick={() => navigate('/')}
                     className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
                   >
-                    Explore Professionals
+                    Find a Professional
                   </button>
                 </>
               )}
@@ -265,9 +265,9 @@ export default function WorkspaceOverview() {
               onClick={() => handleAction('requirements')}
             />
             <QuickActionCard
-              title="View Bookings"
-              description="Verify scheduled sessions"
-              icon="📅"
+              title="View Requests"
+              description="Track project requests"
+              icon="📋"
               onClick={() => handleAction('bookings')}
             />
             <QuickActionCard
@@ -345,7 +345,7 @@ export default function WorkspaceOverview() {
 
             {/* Right side: Summary Activity logs */}
             <div className="dbc-card space-y-4 h-fit">
-              <SectionHeader title="Recent Activity" subtitle="Updates regarding your layout blueprints and bookings" />
+              <SectionHeader title="Recent Activity" subtitle="Updates regarding your layout blueprints and requests" />
               <ActivityTimeline activities={MOCK_ACTIVITIES.slice(0, 3)} />
             </div>
           </div>

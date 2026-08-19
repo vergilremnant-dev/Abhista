@@ -6,11 +6,11 @@ export function BookingTimeline({ status }: BookingTimelineProps) {
   const norm = status.trim().toLowerCase();
 
   const stages = [
-    { key: 'requested', label: 'Requested', active: true },
-    { key: 'confirmed', label: 'Confirmed', active: ['confirmed', 'scheduled', 'in progress', 'completed'].includes(norm) },
-    { key: 'scheduled', label: 'Scheduled', active: ['scheduled', 'in progress', 'completed'].includes(norm) },
-    { key: 'work started', label: 'Work Started', active: ['in progress', 'completed'].includes(norm) },
-    { key: 'completed', label: 'Completed', active: norm === 'completed' },
+    { key: 'requested', label: 'Submitted', active: true },
+    { key: 'confirmed', label: 'Under Review', active: ['confirmed', 'scheduled', 'in progress', 'completed'].includes(norm) },
+    { key: 'discussion', label: 'Proposal', active: ['in progress', 'completed'].includes(norm) },
+    { key: 'work started', label: 'Project Started', active: ['in progress', 'completed'].includes(norm) },
+    { key: 'completed', label: 'Project Completed', active: norm === 'completed' },
   ];
 
   return (

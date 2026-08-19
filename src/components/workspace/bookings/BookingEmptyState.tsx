@@ -11,10 +11,10 @@ export function BookingEmptyState({ onAction }: BookingEmptyStateProps) {
       
       <div className="space-y-1">
         <h4 className="text-xs font-black text-stone-900 uppercase tracking-widest leading-snug">
-          You don't have any bookings yet
+          You haven't started a project request yet
         </h4>
         <p className="text-[10px] text-stone-450 font-medium leading-relaxed">
-          Hire local experts, schedule custom home site design layout contracts, and book verified service partners directly from our catalog.
+          Connect with local experts, submit custom project scope requirements, and request verified service partners directly from our catalog.
         </p>
       </div>
 
@@ -23,7 +23,7 @@ export function BookingEmptyState({ onAction }: BookingEmptyStateProps) {
           onClick={onAction}
           className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[10px] px-4.5 py-2.5 rounded-xl transition shadow-sm focus:outline-none"
         >
-          Explore Professionals
+          Find a Professional
         </button>
       </div>
     </div>

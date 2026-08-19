@@ -37,7 +37,7 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
             <BookingStatusBadge status={booking.status} />
           </div>
           <p className="text-[9px] font-black uppercase text-stone-400 tracking-wider">
-            Booking ID: {booking.id}
+            Request ID: {booking.id}
           </p>
         </div>
         <button
@@ -60,15 +60,15 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
           <span className="block font-bold text-stone-700">{booking.serviceCategory}</span>
         </div>
         <div className="space-y-0.5">
-          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Total Service Fee</span>
+          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Estimated Budget</span>
           <span className="block font-bold text-stone-750">₹{booking.amount.toLocaleString()}</span>
         </div>
         <div className="space-y-0.5">
-          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Scheduled Date</span>
+          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Target Start Date</span>
           <span className="block font-bold text-stone-700">{new Date(booking.scheduledDate).toLocaleDateString()}</span>
         </div>
         <div className="col-span-2 space-y-0.5">
-          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Service Address</span>
+          <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Project Location</span>
           <span className="block font-semibold text-stone-600 leading-relaxed">{booking.address}, {booking.city}</span>
         </div>
       </div>
@@ -80,9 +80,9 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
 
       {/* Booking Notes section */}
       <div className="space-y-1.5 border-t border-stone-100 pt-4 text-xs">
-        <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Booking Notes</span>
-        <p className="text-[10px] text-stone-500 font-semibold leading-relaxed">
-          * Professional will carry all necessary structural layout equipment. Ensure the site location is cleared before the scheduled visit.
+        <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Project Scope & Details</span>
+        <p className="text-[10px] text-stone-600 font-medium leading-relaxed whitespace-pre-line bg-stone-50 p-2.5 rounded-xl border border-stone-100">
+          {booking.projectTitle}
         </p>
       </div>
 
@@ -110,22 +110,22 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
               onClick={onReschedule}
               className="flex-1 bg-stone-900 hover:bg-stone-850 text-white font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center"
             >
-              Reschedule Visit
+              Update Start Date
             </button>
             <button
               onClick={onCancel}
               className="bg-rose-55/10 hover:bg-rose-55/20 text-rose-600 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center border border-rose-100"
             >
-              Cancel
+              Cancel Request
             </button>
           </div>
         )}
         
         <button
-          onClick={() => alert('Download receipt feature is a mockup indicator.')}
+          onClick={() => alert('Download request summary feature is a mockup indicator.')}
           className="w-full bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 font-bold text-[10px] px-3.5 py-2.5 rounded-xl transition uppercase tracking-wider text-center"
         >
-          Download Receipt (PDF)
+          Download Request Summary (PDF)
         </button>
       </div>
 
