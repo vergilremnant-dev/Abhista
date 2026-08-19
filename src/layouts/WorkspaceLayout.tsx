@@ -16,7 +16,7 @@ interface SidebarItem {
 const CUSTOMER_SIDEBAR_ITEMS: SidebarItem[] = [
   { name: 'Dashboard', path: '/workspace/overview', icon: '📊' },
   { name: 'Project Requests', path: '/workspace/bookings', icon: '📋' },
-  { name: 'Inbox', path: '/chat', icon: '💬' },
+  { name: 'Inbox', path: '/workspace/inbox', icon: '💬' },
   { name: 'Profile & Settings', path: '/workspace/settings', icon: '⚙️' },
   { name: 'About DBC', path: '/know-more', icon: 'ℹ️' },
 ];

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { BookingStatusBadge } from './BookingStatusBadge';
 import { BookingTimeline } from './BookingTimeline';
 
@@ -46,6 +47,7 @@ const getNextStepDescription = (status: string) => {
 };
 
 export function BookingDetails({ booking, onClose, onReschedule, onCancel }: BookingDetailsProps) {
+  const navigate = useNavigate();
   const norm = booking.status.trim().toLowerCase();
   const canRescheduleOrCancel = ['confirmed', 'scheduled', 'under review', 'request submitted'].includes(norm);
 
@@ -128,10 +130,24 @@ export function BookingDetails({ booking, onClose, onReschedule, onCancel }: Boo
         </div>
         <div className="border border-stone-200 rounded-xl p-3 bg-stone-50/50 space-y-1 text-center">
           <span className="block text-[8px] uppercase font-black text-stone-400 tracking-wider">Messaging Chat</span>
-          <button className="text-[10px] font-bold text-emerald-700 hover:underline block mx-auto cursor-not-allowed" disabled>
-            💬 Open Thread
-          </button>
-          <span className="block text-[8px] text-stone-400 font-bold uppercase tracking-wide">Available Post-Match</span>
+          {!['requested', 'pending', 'request submitted'].includes(norm) ? (
+            <button
+              onClick={() => navigate('/workspace/inbox')}
+              className="text-[10px] font-bold text-emerald-700 hover:text-emerald-800 hover:underline block mx-auto cursor-pointer"
+            >
+              💬 Open Thread
+            </button>
+          ) : (
+            <button
+              className="text-[10px] font-bold text-stone-400 block mx-auto cursor-not-allowed"
+              disabled
+            >
+              💬 Open Thread
+            </button>
+          )}
+          <span className="block text-[8px] text-stone-400 font-bold uppercase tracking-wide">
+            {!['requested', 'pending', 'request submitted'].includes(norm) ? 'Chat Active' : 'Available Post-Match'}
+          </span>
         </div>
       </div>
 
