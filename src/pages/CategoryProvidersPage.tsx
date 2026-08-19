@@ -172,7 +172,7 @@ export function CategoryProvidersPage() {
                     {category.categoryType === 'BLUE_COLLAR' ? 'Blue Collar' : 'White Collar'}
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm text-stone-500 font-medium mt-1 leading-relaxed max-w-2xl">{category.description || 'Verified local professional specialists.'}</p>
+                <p className="text-xs sm:text-sm text-stone-500 font-medium mt-1 leading-relaxed max-w-2xl">{category.description || 'Verified local partners for construction, design, and long-term project requirements.'}</p>
               </div>
             </div>
             

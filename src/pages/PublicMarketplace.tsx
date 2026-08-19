@@ -313,7 +313,7 @@ export function PublicMarketplace() {
               <span className="text-brand-emerald italic font-light">Connect.</span>
             </h1>
             <p className="text-subtitle text-stone-gray max-w-lg leading-relaxed font-medium">
-              A premium digital ecosystem for architecture, design, and construction. Instantly connect with verified professionals, manage coordinates, and track project progress from blueprint planning to manual trade execution.
+              A premium digital ecosystem for architecture, design, and construction. Connect with verified local professionals, discuss your scope requirements, and track long-term project execution from blueprints to completion.
             </p>
 
             {/* Hero Discovery Module */}
@@ -365,7 +365,7 @@ export function PublicMarketplace() {
                 <span className="text-stone-400 text-sm pointer-events-none select-none">🔍</span>
                 <input
                   type="text"
-                  placeholder="Search professionals, architects, contractors..."
+                  placeholder="Search construction services, architects, contractors..."
                   value={heroSearchVal}
                   onChange={(e) => setHeroSearchVal(e.target.value)}
                   onKeyDown={(e) => {
@@ -439,7 +439,7 @@ export function PublicMarketplace() {
 
             {/* Micro Trust strip */}
             <div className="flex items-center gap-4 text-[9px] text-stone-gray font-black uppercase tracking-widest pt-2">
-              <span className="flex items-center gap-1">✓ 100% Verified Partners</span>
+              <span className="flex items-center gap-1">✓ Verified Professional Profiles</span>
               <span>•</span>
               { /* <span className="flex items-center gap-1">✓ Zero Broker Fees</span> */}
               <span className="flex items-center gap-1">✓ Trusted Partnerships</span>
@@ -488,11 +488,11 @@ export function PublicMarketplace() {
       <section className="border-b border-light-border/40 bg-white/45 backdrop-blur-md py-6">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 grid grid-cols-2 md:grid-cols-5 gap-6 text-center text-stone-gray">
           {[
-            { label: 'Verified Experts', icon: '🛡️' },
+            { label: 'Verified Profiles', icon: '🛡️' },
             { label: 'Secure Platform', icon: '💬' },
-            { label: 'Transparent Bids', icon: '📊' },
+            { label: 'Transparent Quotes', icon: '📊' },
             { label: 'Project Tracking', icon: '⚙%' },
-            { label: 'Quality Assurance', icon: '⭐' },
+            { label: 'Direct Communication', icon: '⭐' },
           ].map((item, idx) => (
             <div key={idx} className="flex items-center justify-center gap-2">
               <span className="text-sm">{item.icon.replace('%', '')}</span>
@@ -528,7 +528,7 @@ export function PublicMarketplace() {
                       <div className="flex items-center gap-3">
                         <span className="text-xl p-2 bg-white rounded-xl border border-light-border">🤖</span>
                         <div>
-                          <h3 className="text-xs font-black uppercase tracking-wider text-stone-black">Project Assistant</h3>
+                          <h3 className="text-xs font-black uppercase tracking-wider text-stone-black">AI-Project Assistant</h3>
                           <span className="inline-block text-[8px] font-black text-brand-emerald bg-brand-emerald/5 px-2 py-0.5 rounded border border-brand-emerald/10 mt-0.5">
                             Interactive Route
                           </span>
@@ -810,21 +810,23 @@ export function PublicMarketplace() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch relative">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-stretch relative">
           {[
-            { step: '01', title: 'Design', label: 'Architects & Layouts', desc: 'Collaborate with architects and structural engineers to finalize layout drafts, site structures, and 3D renderings.' },
-            { step: '02', title: 'Build', label: 'Verified Trade Specialist Contractors', desc: 'Connect with verified electricians, carpenters, plumbers, and builders to receive quote proposals.' },
-            { step: '03', title: 'Connect', label: 'Milestones Coordination board', desc: 'Manage invoices, release payments on milestones, and communicate with partners in real-time.' },
+            { step: '01', title: 'Find Service', label: 'Explore Partners', desc: 'Explore construction, design and related manual trade professionals active in your region.' },
+            { step: '02', title: 'Discuss Project', label: 'Share Scope', desc: 'Detail your scope parameters, timelines, and approximate budgets directly with the professional.' },
+            { step: '03', title: 'Receive Proposal', label: 'Get Quote', desc: 'Discuss project particulars and receive structural design coordinate or milestone quote proposals.' },
+            { step: '04', title: 'Start Project', label: 'Agree Terms', desc: 'Finalize milestones and contract terms. Work begins only when you authorize start parameters.' },
+            { step: '05', title: 'Manage Project', label: 'Track Progress', desc: 'Communicate with partners, verify milestones, and release stage payments in your dashboard.' },
           ].map((item, idx) => (
-            <div key={idx} className="dbc-card p-6 flex flex-col justify-between hover:shadow-apple-md transition-shadow relative bg-white border border-light-border">
-              <div className="space-y-4">
+            <div key={idx} className="dbc-card p-4.5 flex flex-col justify-between hover:shadow-apple-md transition-all relative bg-white border border-light-border rounded-2xl">
+              <div className="space-y-3 text-left">
                 <span className="text-xs font-black text-brand-emerald/40 tracking-widest block">{item.step}</span>
                 <div className="space-y-1">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-stone-black">{item.title}</h3>
-                  <span className="block text-[8px] font-black uppercase bg-light-stone text-stone-gray px-2 py-0.5 rounded max-w-max border border-light-border">
+                  <h3 className="text-[11px] font-black uppercase tracking-wider text-stone-black">{item.title}</h3>
+                  <span className="block text-[7.5px] font-black uppercase bg-light-stone text-stone-gray px-1.5 py-0.5 rounded max-w-max border border-light-border">
                     {item.label}
                   </span>
-                  <p className="text-xs text-stone-gray leading-relaxed font-semibold pt-2">{item.desc}</p>
+                  <p className="text-[10.5px] text-stone-500 leading-relaxed font-semibold pt-1">{item.desc}</p>
                 </div>
               </div>
             </div>
