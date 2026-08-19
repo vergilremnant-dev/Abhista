@@ -4,7 +4,7 @@ interface NotificationItem {
   id: string;
   title: string;
   content: string;
-  category: 'System' | 'Projects' | 'Leads' | 'Bookings';
+  category: 'System' | 'Projects' | 'Leads' | 'Requests';
   time: string;
   isRead: boolean;
   priority: 'High' | 'Normal';
@@ -12,7 +12,7 @@ interface NotificationItem {
 
 const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   { id: 'not-1', title: 'New Matching Lead Posted', content: 'A customer posted a requirement: "Kitchen Interior & Cabinets Drafting" in Madhapur.', category: 'Leads', time: '2 hours ago', isRead: false, priority: 'High' },
-  { id: 'not-2', title: 'Consultation Booking Scheduled', content: 'Alice Architect scheduled a site measurement visit for 02 Aug 2026.', category: 'Bookings', time: '5 hours ago', isRead: false, priority: 'High' },
+  { id: 'not-2', title: 'Consultation Request Submitted', content: 'Alice Architect requested a structural engineering consult for 02 Aug 2026.', category: 'Requests', time: '5 hours ago', isRead: false, priority: 'High' },
   { id: 'not-3', title: 'Milestone Completed Approved', content: 'Customer released ₹15,000 payment for structural approval milestone.', category: 'Projects', time: '3 days ago', isRead: true, priority: 'Normal' },
   { id: 'not-4', title: 'DBC Account Verified', content: 'DBC administration approved your premium contractor credentials check.', category: 'System', time: '1 week ago', isRead: true, priority: 'Normal' },
 ];
@@ -81,7 +81,7 @@ export default function ProfessionalNotifications() {
 
       {/* Categories filters */}
       <div className="flex flex-wrap gap-2 pt-2 text-[9px] font-black uppercase tracking-wider">
-        {['ALL', 'SYSTEM', 'PROJECTS', 'LEADS', 'BOOKINGS'].map((cat) => (
+        {['ALL', 'SYSTEM', 'PROJECTS', 'LEADS', 'REQUESTS'].map((cat) => (
           <button
             key={cat}
             onClick={() => setCategoryFilter(cat)}

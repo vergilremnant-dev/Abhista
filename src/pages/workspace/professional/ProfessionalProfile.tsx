@@ -411,7 +411,7 @@ export default function ProfessionalProfile() {
               <div className="pt-2 flex justify-between items-center border-t border-light-border/40">
                 <div>
                   <strong className="text-stone-850 block">Vacation Mode</strong>
-                  <span className="text-[10px] text-stone-400 font-bold block">Pause booking requests</span>
+                   <span className="text-[10px] text-stone-400 font-bold block">Pause inbound project requests</span>
                 </div>
                 <input
                   type="checkbox"

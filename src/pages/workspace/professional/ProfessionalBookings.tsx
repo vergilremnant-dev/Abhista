@@ -122,17 +122,17 @@ export default function ProfessionalBookings() {
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking(prev => prev ? { ...prev, status: 'ACCEPTED' as BookingStatus } : null);
       }
-      alert('✓ Booking accepted successfully.');
+      alert('✓ Project request accepted successfully.');
     } catch (err: unknown) {
-      console.error('Failed to accept booking', err);
-      alert('Failed to accept booking. Please try again.');
+      console.error('Failed to accept request', err);
+      alert('Failed to accept project request. Please try again.');
     } finally {
       setActionLoadingId(null);
     }
   };
 
   const handleReject = async (id: string) => {
-    if (!confirm('Are you sure you want to decline this booking request?')) return;
+    if (!confirm('Are you sure you want to decline this project request?')) return;
     setActionLoadingId(id);
     try {
       await bookingApi.rejectBooking(id);
@@ -142,10 +142,10 @@ export default function ProfessionalBookings() {
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking(prev => prev ? { ...prev, status: 'REJECTED' as BookingStatus } : null);
       }
-      alert('Booking declined.');
+      alert('Project request declined.');
     } catch (err: unknown) {
-      console.error('Failed to decline booking', err);
-      alert('Failed to decline booking. Please try again.');
+      console.error('Failed to decline request', err);
+      alert('Failed to decline project request. Please try again.');
     } finally {
       setActionLoadingId(null);
     }
@@ -161,17 +161,17 @@ export default function ProfessionalBookings() {
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking(prev => prev ? { ...prev, status: 'IN_PROGRESS' as BookingStatus } : null);
       }
-      alert('✓ Service work marked as In Progress.');
+      alert('✓ Project marked as Started.');
     } catch (err: unknown) {
-      console.error('Failed to start booking', err);
-      alert('Failed to update booking status.');
+      console.error('Failed to start project', err);
+      alert('Failed to update project status.');
     } finally {
       setActionLoadingId(null);
     }
   };
 
   const handleComplete = async (id: string) => {
-    if (!confirm('Confirm marking this service booking as COMPLETED?')) return;
+    if (!confirm('Confirm marking this project as COMPLETED?')) return;
     setActionLoadingId(id);
     try {
       await bookingApi.completeBooking(id);
@@ -181,10 +181,10 @@ export default function ProfessionalBookings() {
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking(prev => prev ? { ...prev, status: 'COMPLETED' as BookingStatus } : null);
       }
-      alert('✓ Service marked as Completed. Customer and provider stats updated.');
+      alert('✓ Project marked as Completed.');
     } catch (err: unknown) {
-      console.error('Failed to complete booking', err);
-      alert('Failed to complete booking. Please try again.');
+      console.error('Failed to complete project', err);
+      alert('Failed to complete project. Please try again.');
     } finally {
       setActionLoadingId(null);
     }
