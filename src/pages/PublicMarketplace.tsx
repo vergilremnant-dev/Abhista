@@ -427,13 +427,13 @@ export function PublicMarketplace() {
                 onClick={() => setQuizStep(1)}
                 className="dbc-btn dbc-btn-primary h-12 px-6 rounded-lg shadow-apple-sm text-xs font-bold uppercase tracking-wider cursor-pointer"
               >
-                Post a Requirement
+                Start Your Project
               </button>
               <button
                 onClick={() => handleConsultantClick('Architects')}
                 className="dbc-btn dbc-btn-outline h-12 px-6 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer bg-white"
               >
-                Explore Professionals
+                Browse Professionals
               </button>
             </div>
 
@@ -441,7 +441,8 @@ export function PublicMarketplace() {
             <div className="flex items-center gap-4 text-[9px] text-stone-gray font-black uppercase tracking-widest pt-2">
               <span className="flex items-center gap-1">✓ 100% Verified Partners</span>
               <span>•</span>
-              <span className="flex items-center gap-1">✓ Zero Broker Fees</span>
+              { /* <span className="flex items-center gap-1">✓ Zero Broker Fees</span> */}
+              <span className="flex items-center gap-1">✓ Trusted Partnerships</span>
             </div>
           </div>
 
@@ -811,8 +812,8 @@ export function PublicMarketplace() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch relative">
           {[
-            { step: '01', title: 'Design', label: 'Architects & Layouts', desc: 'Collaborate with architects and landscape designers to finalize layout drafts, site structures, and 3D renderings.' },
-            { step: '02', title: 'Build', label: 'Verified Trade Specialist Contractors', desc: 'Book verified electricians, carpenters, plumbers, and bricklayers for physical site coordination.' },
+            { step: '01', title: 'Design', label: 'Architects & Layouts', desc: 'Collaborate with architects and structural engineers to finalize layout drafts, site structures, and 3D renderings.' },
+            { step: '02', title: 'Build', label: 'Verified Trade Specialist Contractors', desc: 'Connect with verified electricians, carpenters, plumbers, and builders to receive quote proposals.' },
             { step: '03', title: 'Connect', label: 'Milestones Coordination board', desc: 'Manage invoices, release payments on milestones, and communicate with partners in real-time.' },
           ].map((item, idx) => (
             <div key={idx} className="dbc-card p-6 flex flex-col justify-between hover:shadow-apple-md transition-shadow relative bg-white border border-light-border">
@@ -837,7 +838,7 @@ export function PublicMarketplace() {
           <div className="space-y-2 text-left">
             <h2 className="text-title text-stone-black">Trade Execution Categories</h2>
             <p className="text-xs text-stone-gray font-semibold">
-              Find manual contractors and engineering specialists for structural brickwork and layouts.
+              Find manual contractors and engineering specialists.
             </p>
           </div>
 

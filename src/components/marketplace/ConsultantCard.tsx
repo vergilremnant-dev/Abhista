@@ -128,7 +128,7 @@ export function ConsultantCard({ consultant, onBook, onViewProfile }: Consultant
             onClick={() => onBook(consultant)}
             className="h-8.5 px-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-[11px] font-bold uppercase tracking-wider transition shadow-2xs cursor-pointer flex items-center justify-center gap-1"
           >
-            <span>Book Consultation</span>
+            <span>Request Consultation</span>
             <span>→</span>
           </button>
         </div>

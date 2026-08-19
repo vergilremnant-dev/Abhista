@@ -91,7 +91,7 @@ export function ServiceCard({ service, onBook }: ServiceCardProps) {
             onClick={() => onBook(service)}
             className="w-full h-8.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-[11px] font-bold uppercase tracking-wider transition shadow-2xs cursor-pointer flex items-center justify-center gap-1"
           >
-            <span>Book Package</span>
+            <span>Request Package</span>
             <span>→</span>
           </button>
         </div>

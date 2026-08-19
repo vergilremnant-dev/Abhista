@@ -24,7 +24,7 @@ export function BookServicePage() {
 
   const todayStr = new Date().toISOString().split('T')[0];
   const [date, setDate] = useState('');
-  const [time, setTime] = useState('10:00 AM');
+  const [time] = useState('10:00 AM');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState(selectedCity || 'Hyderabad');
   const [state, setState] = useState('Telangana');
@@ -118,13 +118,13 @@ export function BookServicePage() {
     setMessage('');
 
     if (!providerId) {
-      setError('Please select a service professional before booking.');
+      setError('Please select a professional before requesting a quote.');
       setLoading(false);
       return;
     }
 
     if (!date) {
-      setError('Please select a preferred service date.');
+      setError('Please select a target start date.');
       setLoading(false);
       return;
     }
@@ -148,12 +148,12 @@ export function BookServicePage() {
         estimatedBudget: budget ? Number(budget) : null,
       });
 
-      setMessage(`Success! Booking request ${response.bookingNumber} created successfully.`);
+      setMessage(`Success! Project request ${response.bookingNumber} created successfully.`);
       setTimeout(() => {
         navigate('/workspace/bookings');
       }, 1500);
     } catch (err: unknown) {
-      let errMsg = 'Failed to submit booking';
+      let errMsg = 'Failed to submit request';
       if (axios.isAxiosError(err)) {
         errMsg = err.response?.data?.message || err.message || errMsg;
       } else if (err instanceof Error) {
@@ -179,10 +179,10 @@ export function BookServicePage() {
                 Verified DBC Dispatch
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight font-serif">
-                Book Your Service
+                Request Project Quote
               </h1>
               <p className="mt-1 text-sm text-stone-600 font-medium">
-                Schedule a visit with a verified DBC professional.
+                Submit your project requirements and spatial parameters to receive a coordinate proposal.
               </p>
             </div>
 
@@ -312,7 +312,7 @@ export function BookServicePage() {
                             <>
                               <span className="text-stone-300">•</span>
                               <span className="text-stone-700 font-semibold">
-                                {selectedProvider.totalBookings} Jobs Completed
+                                {selectedProvider.totalBookings} Projects Completed
                               </span>
                             </>
                           )}
@@ -355,11 +355,11 @@ export function BookServicePage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                  {/* Preferred Date */}
+                <div className="grid grid-cols-1 gap-4 pt-1">
+                  {/* Target Start Date */}
                   <div>
                     <label className="block text-[11px] font-black uppercase tracking-wider text-stone-600 mb-1.5">
-                      Preferred Date <span className="text-rose-500">*</span>
+                      Target Start Date <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
                       <input
@@ -370,34 +370,6 @@ export function BookServicePage() {
                         onChange={(e) => setDate(e.target.value)}
                         className="w-full h-11 rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-stone-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition"
                       />
-                    </div>
-                  </div>
-
-                  {/* Preferred Time */}
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-wider text-stone-600 mb-1.5">
-                      Preferred Time Slot <span className="text-rose-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                        className="w-full h-11 rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-stone-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition appearance-none cursor-pointer pr-10"
-                      >
-                        <option value="09:00 AM">09:00 AM (Morning)</option>
-                        <option value="10:00 AM">10:00 AM (Morning)</option>
-                        <option value="11:00 AM">11:00 AM (Morning)</option>
-                        <option value="12:00 PM">12:00 PM (Noon)</option>
-                        <option value="02:00 PM">02:00 PM (Afternoon)</option>
-                        <option value="03:00 PM">03:00 PM (Afternoon)</option>
-                        <option value="04:00 PM">04:00 PM (Evening)</option>
-                        <option value="05:00 PM">05:00 PM (Evening)</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-stone-500">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -510,7 +482,7 @@ export function BookServicePage() {
                     <svg className="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>
-                    Booking Summary
+                    Request Summary
                   </h3>
                   <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                     Step 3
@@ -535,18 +507,12 @@ export function BookServicePage() {
                     </span>
                   </div>
 
-                  {/* Date */}
+                  {/* Start Date */}
                   <div className="flex justify-between items-start gap-3 border-t border-stone-100 pt-2.5">
-                    <span className="text-stone-500 font-medium">Date</span>
+                    <span className="text-stone-500 font-medium">Start Date</span>
                     <span className={`font-bold text-right ${date ? 'text-stone-900' : 'text-stone-400 font-normal italic'}`}>
                       {date ? formatDateLabel(date) : 'Choose date'}
                     </span>
-                  </div>
-
-                  {/* Time */}
-                  <div className="flex justify-between items-start gap-3 border-t border-stone-100 pt-2.5">
-                    <span className="text-stone-500 font-medium">Time</span>
-                    <span className="font-bold text-stone-900 text-right">{time}</span>
                   </div>
 
                   {/* Address */}
@@ -593,12 +559,12 @@ export function BookServicePage() {
                       <span>Submitting Request...</span>
                     </>
                   ) : (
-                    <span>Confirm Booking</span>
+                    <span>Submit Request</span>
                   )}
                 </button>
 
                 <p className="text-[10px] text-stone-400 text-center font-medium">
-                  By confirming, a booking visit request is dispatched to the professional.
+                  By confirming, a project quote request is dispatched to the professional.
                 </p>
 
               </div>

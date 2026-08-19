@@ -165,8 +165,8 @@ export function Navbar() {
     }
     // Public / Logged-out navigation
     return [
-      { label: 'Explore', to: '/' },
-      { label: 'Professionals', to: '/search' },
+      { label: 'Find Services', to: '/' },
+      { label: 'Browse Professionals', to: '/search' },
       { label: 'Subscriptions', to: '/subscriptions' },
       { label: 'About', to: '/know-more' },
       { label: 'Blog', to: '/blog' },

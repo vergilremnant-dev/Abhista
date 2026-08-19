@@ -124,7 +124,7 @@ export function CategoryProvidersPage() {
 
     if (!isAuthenticated) {
       setPendingAction(() => action);
-      setAuthMessage('You must be signed in to submit a service request.');
+      setAuthMessage('You must be signed in to submit a project coordinate request.');
       setIsAuthModalOpen(true);
       return;
     }
@@ -293,7 +293,7 @@ export function CategoryProvidersPage() {
                       onClick={() => handleBookService(p)}
                       className="flex-1 py-2 rounded-lg text-xs font-bold uppercase text-white bg-brand-emerald hover:bg-brand-emerald/90 transition duration-200 cursor-pointer shadow-xs"
                     >
-                      Book Service
+                      Discuss Project
                     </button>
                   </div>
                 </div>
@@ -356,7 +356,7 @@ export function CategoryProvidersPage() {
                 }}
                 className="flex-1 bg-brand-emerald hover:bg-brand-emerald/90 text-white rounded-xl py-2.5 text-xs font-bold uppercase transition shadow-xs cursor-pointer"
               >
-                Request Booking
+                Request Quote
               </button>
             </div>
           </div>

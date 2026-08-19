@@ -261,13 +261,13 @@ export function SearchResultsPage() {
 
     if (!isAuthenticated) {
       setPendingAction(() => action);
-      setAuthMessage('You must be signed in to submit a service request.');
+      setAuthMessage('You must be signed in to submit a project coordinate request.');
       setIsAuthModalOpen(true);
       return;
     }
 
     if (user?.role !== 'ROLE_CUSTOMER') {
-      setErrorMsg('Only customers can book providers.');
+      setErrorMsg('Only customers can request coordinates.');
       return;
     }
 
