@@ -16,7 +16,7 @@ export function WelcomeCard({ name, completionPercentage, onCompleteProfile }: W
           Welcome back, {name || 'Client'}
         </h2>
         <p className="text-xs text-stone-500 font-medium leading-relaxed max-w-xl">
-          Manage your requirements, bookings, and project activities from one place.
+          Here's what's happening with your project requests and active projects.
         </p>
       </div>
 

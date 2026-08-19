@@ -170,91 +170,63 @@ export default function WorkspaceOverview() {
             onCompleteProfile={() => handleAction('settings')}
           />
 
-          {/* DYNAMIC NEXT ACTION BANNER (Urban Company Inspiration) */}
-          <div className="bg-gradient-to-r from-emerald-50 to-white border border-emerald-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 text-left">
-            <div className="space-y-1.5 flex-1">
-              <span className="text-[8px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
-                Next Suggested Step
-              </span>
-              {bookings.length > 0 ? (
-                <>
-                  <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
-                    Active Project Requests
-                  </h3>
-                  <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
-                    Track the progress of your active project requests or message your assigned specialists for project details.
-                  </p>
-                </>
-              ) : requirements.length > 0 ? (
-                <>
-                  <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
-                    Manage Requirements & Offers
-                  </h3>
-                  <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
-                    You have active project requirements. Check quotes and proposals submitted by local specialists.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-base font-bold text-stone-900 font-serif leading-tight">
-                    Get Started with DBC
-                  </h3>
-                  <p className="text-xs text-stone-500 font-semibold leading-relaxed max-w-xl">
-                    Publish your project specifications to receive free bids from local contractors, or explore vetted partner profiles.
-                  </p>
-                </>
-              )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3.5 flex-shrink-0">
-              {bookings.length > 0 ? (
-                <>
-                  <button
-                    onClick={() => navigate('/workspace/bookings')}
-                    className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
-                  >
-                    View Requests
-                  </button>
-                  <button
-                    onClick={() => navigate('/chat')}
-                    className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
-                  >
-                    Message Professional
-                  </button>
-                </>
-              ) : requirements.length > 0 ? (
-                <>
-                  <button
-                    onClick={() => navigate('/workspace/requirements')}
-                    className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
-                  >
-                    Manage Requirements
-                  </button>
-                  <button
-                    onClick={() => navigate('/')}
-                    className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
-                  >
-                    Find a Professional
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => navigate('/workspace/requirements')}
-                    className="dbc-btn dbc-btn-primary px-4 py-2 text-[10px] font-black uppercase tracking-wider cursor-pointer"
-                  >
-                    Create Requirement
-                  </button>
-                  <button
-                    onClick={() => navigate('/')}
-                    className="px-4 py-2 border border-stone-200 hover:border-stone-300 rounded-lg text-[10px] font-black text-stone-600 uppercase tracking-wider bg-white transition cursor-pointer"
-                  >
-                    Find a Professional
-                  </button>
-                </>
-              )}
-            </div>
+          {/* ACTION CENTER */}
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-black uppercase tracking-wider text-stone-400">Action Required</h3>
+            {MOCK_PAYMENTS.filter(p => p.status === 'Pending').length > 0 ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left">
+                <div className="flex items-start sm:items-center gap-3">
+                  <span className="text-xl">⚠️</span>
+                  <div>
+                    <h4 className="text-xs font-black text-amber-900 uppercase tracking-wide">Milestone Payment Pending</h4>
+                    <p className="text-[10.5px] text-amber-700 font-semibold mt-0.5">
+                      Release funds for "{MOCK_PAYMENTS.find(p => p.status === 'Pending')?.milestone}" to proceed with structural work.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveTab('payments')}
+                  className="bg-amber-850 hover:bg-amber-900 active:bg-amber-950 text-white font-black text-[9px] uppercase tracking-wider px-4 py-2.5 rounded-xl transition shadow-xs cursor-pointer select-none"
+                >
+                  Release Funds
+                </button>
+              </div>
+            ) : (
+              <div className="bg-stone-50 border border-stone-200/50 rounded-2xl p-4 text-left text-xs font-semibold text-stone-500 flex items-center gap-2">
+                <span className="text-emerald-700 font-extrabold text-sm">✓</span>
+                <span>You're all caught up. No pending actions require your attention.</span>
+              </div>
+            )}
           </div>
+
+          {/* ONBOARDING STATE FOR NEW CUSTOMERS */}
+          {bookings.length === 0 && requirements.length === 0 && (
+            <div className="bg-white border border-stone-200 rounded-2xl p-8 text-center space-y-5 shadow-sm max-w-2xl mx-auto my-4">
+              <div className="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-inner border border-emerald-100">
+                🏗️
+              </div>
+              <div className="space-y-2 text-center">
+                <h3 className="text-base font-black text-stone-900 font-serif">Start Your First Project</h3>
+                <p className="text-xs text-stone-500 max-w-md mx-auto leading-relaxed">
+                  Find a construction or design professional, share your project requirements, receive custom quotations, and manage milestones end-to-end.
+                </p>
+              </div>
+              <div className="flex justify-center gap-3">
+                <button
+                  onClick={() => navigate('/')}
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
+                >
+                  Find a Professional
+                </button>
+                <button
+                  onClick={() => navigate('/workspace/requirements')}
+                  className="border border-stone-200 hover:bg-stone-50 text-stone-700 font-bold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer"
+                >
+                  Post Requirements
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Quick Actions Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -283,27 +255,6 @@ export default function WorkspaceOverview() {
               onClick={() => navigate('/subscriptions')}
             />
           </div>
-
-          {/* Action Required Banner */}
-          {MOCK_PAYMENTS.filter(p => p.status === 'Pending').length > 0 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4.5 shadow-xs flex items-center justify-between gap-4 text-left">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">⚠️</span>
-                <div>
-                  <h4 className="text-xs font-black text-amber-900 uppercase tracking-wide">Action Required: Milestone Payment Pending</h4>
-                  <p className="text-[10px] text-amber-700 font-semibold mt-0.5">
-                    Release funds for "{MOCK_PAYMENTS.find(p => p.status === 'Pending')?.milestone}" to proceed with structural work.
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setActiveTab('payments')}
-                className="bg-amber-850 hover:bg-amber-900 text-white font-black text-[9px] uppercase tracking-wider px-3.5 py-2 rounded-xl transition shadow-xs cursor-pointer select-none"
-              >
-                Review & Pay
-              </button>
-            </div>
-          )}
 
           {/* Stats Metrics Row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
