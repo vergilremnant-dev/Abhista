@@ -206,6 +206,10 @@ export async function acceptBooking(bookingId: string, providerId: string) {
     throw new Error('Unauthorized: You can only accept bookings submitted to you');
   }
 
+  if (booking.bookingStatus !== BookingStatus.REQUESTED) {
+    throw new Error('Only pending requests can be accepted');
+  }
+
   const updated = await db.booking.update({
     where: { id: booking.id },
     data: { bookingStatus: BookingStatus.ACCEPTED },
@@ -243,6 +247,10 @@ export async function rejectBooking(bookingId: string, providerId: string) {
 
   if (booking.providerId !== providerId) {
     throw new Error('Unauthorized: You can only reject bookings submitted to you');
+  }
+
+  if (booking.bookingStatus !== BookingStatus.REQUESTED) {
+    throw new Error('Only pending requests can be declined');
   }
 
   const updated = await db.booking.update({
@@ -284,6 +292,10 @@ export async function startBooking(bookingId: string, providerId: string) {
     throw new Error('Unauthorized: You can only start bookings assigned to you');
   }
 
+  if (booking.bookingStatus !== BookingStatus.ACCEPTED) {
+    throw new Error('Only accepted project requests can be started');
+  }
+
   const updated = await db.booking.update({
     where: { id: booking.id },
     data: { bookingStatus: BookingStatus.IN_PROGRESS },
@@ -321,6 +333,10 @@ export async function completeBooking(bookingId: string, providerId: string) {
 
   if (booking.providerId !== providerId) {
     throw new Error('Unauthorized: You can only complete bookings assigned to you');
+  }
+
+  if (booking.bookingStatus !== BookingStatus.IN_PROGRESS) {
+    throw new Error('Only started projects can be marked as completed');
   }
 
   const updated = await db.booking.update({

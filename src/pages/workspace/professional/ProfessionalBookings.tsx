@@ -123,9 +123,10 @@ export default function ProfessionalBookings() {
         setSelectedBooking(prev => prev ? { ...prev, status: 'ACCEPTED' as BookingStatus } : null);
       }
       alert('✓ Project request accepted successfully.');
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error('Failed to accept request', err);
-      alert('Failed to accept project request. Please try again.');
+      const serverMessage = err?.response?.data?.message || err?.message || 'Failed to accept project request.';
+      alert(`⚠️ ${serverMessage}`);
     } finally {
       setActionLoadingId(null);
     }
@@ -143,9 +144,10 @@ export default function ProfessionalBookings() {
         setSelectedBooking(prev => prev ? { ...prev, status: 'REJECTED' as BookingStatus } : null);
       }
       alert('Project request declined.');
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error('Failed to decline request', err);
-      alert('Failed to decline project request. Please try again.');
+      const serverMessage = err?.response?.data?.message || err?.message || 'Failed to decline project request.';
+      alert(`⚠️ ${serverMessage}`);
     } finally {
       setActionLoadingId(null);
     }
@@ -162,9 +164,10 @@ export default function ProfessionalBookings() {
         setSelectedBooking(prev => prev ? { ...prev, status: 'IN_PROGRESS' as BookingStatus } : null);
       }
       alert('✓ Project marked as Started.');
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error('Failed to start project', err);
-      alert('Failed to update project status.');
+      const serverMessage = err?.response?.data?.message || err?.message || 'Failed to update project status.';
+      alert(`⚠️ ${serverMessage}`);
     } finally {
       setActionLoadingId(null);
     }
@@ -182,9 +185,10 @@ export default function ProfessionalBookings() {
         setSelectedBooking(prev => prev ? { ...prev, status: 'COMPLETED' as BookingStatus } : null);
       }
       alert('✓ Project marked as Completed.');
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error('Failed to complete project', err);
-      alert('Failed to complete project. Please try again.');
+      const serverMessage = err?.response?.data?.message || err?.message || 'Failed to complete project.';
+      alert(`⚠️ ${serverMessage}`);
     } finally {
       setActionLoadingId(null);
     }
