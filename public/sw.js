@@ -19,13 +19,17 @@ self.addEventListener('fetch', (e) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(e.request).catch(() => {
+      return fetch(e.request).catch((err) => {
         // Return a mock fallback offline response if target is api/projects
         if (e.request.url.includes('/api/projects')) {
           return new Response(JSON.stringify([]), {
             headers: { 'Content-Type': 'application/json' }
           });
         }
+        if (e.request.mode === 'navigate') {
+          return caches.match('/index.html');
+        }
+        throw err;
       });
     })
   );
